@@ -98,7 +98,7 @@ body.home #rail{display:none}
 /* ===== HOME ===== */
 #s-home{padding:0;overflow:hidden}
 #homeBg{position:absolute;inset:0}
-#homeBg div{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.4s,transform 8s linear;transform:scale(1.08)}
+#homeBg div{position:absolute;inset:0;opacity:0;transition:opacity 1.4s,transform 8s linear;transform:scale(1.08)}
 #homeBg div.on{opacity:1;transform:scale(1)}
 #s-home::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,10,.96) 0%,rgba(5,5,10,.75) 40%,rgba(5,5,10,.15) 75%),linear-gradient(0deg,rgba(5,5,10,.9),transparent 30%);pointer-events:none}
 .home-in{position:relative;z-index:2;height:100%;display:grid;grid-template-columns:minmax(320px,560px) 1fr;align-items:center;padding:60px 6vw 40px}
@@ -115,6 +115,22 @@ body.home #rail{display:none}
 .menu li button:hover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--y)}
 .home-side{justify-self:end;align-self:end;max-width:420px;text-align:right}
 @media(max-width:900px){.home-side{display:none}}
+/* phones: portrait key art on top, compact 2-column menu at the bottom */
+@media(max-width:800px){
+ #s-home::after{background:linear-gradient(180deg,rgba(5,5,10,.1) 0%,rgba(5,5,10,.3) 30%,rgba(5,5,10,.88) 54%,rgba(5,5,10,.97) 100%)}
+ #homeBg img{object-position:top}
+ .home-in{display:flex;flex-direction:column;justify-content:flex-end;padding:64px 16px 18px;overflow:auto}
+ .brand .k{font-size:10px;letter-spacing:.12em}
+ .brand h1{font-size:clamp(44px,14vw,64px)}
+ .brand .sub{display:none}
+ .menu{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+ .menu li button{padding:11px 10px;font-size:13px;gap:8px;background:rgba(10,10,18,.8);border:1px solid var(--line);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+ .menu li button i{font-size:11px}
+ .menu li button small{display:none}
+ .menu li button:hover,.menu li button:focus-visible{padding-left:10px}
+ .bgimg::after{background:linear-gradient(180deg,rgba(5,5,10,.45),rgba(5,5,10,.93) 40%)}
+ .bgimg img{object-position:top}
+}
 .home-side .q{font-family:Orbitron;font-weight:900;font-size:30px;line-height:1.1}
 .home-side .q span{color:var(--r)}
 .home-side .meta{font-family:'Share Tech Mono';color:var(--dim);font-size:13px;margin-top:10px}
@@ -302,34 +318,21 @@ body.home #rail{display:none}
 .rd-note{font-size:12px;color:rgba(255,95,95,.55);margin-top:10px;text-transform:none;letter-spacing:0}
 @media(max-width:900px){.rd-main{grid-template-columns:1fr}.rd-body{height:300px;min-height:0;order:-1}.rd-col.L{align-items:flex-start}.rd-col.L .rg-h{justify-content:flex-start}.rd-lines{display:none}}
 
-/* ===== MUSIC WIDGET ===== */
-#radio{position:fixed;right:16px;bottom:16px;z-index:70;width:360px;background:rgba(8,6,12,.92);border:1px solid rgba(255,0,60,.5);clip-path:var(--cut);backdrop-filter:blur(8px);display:grid;grid-template-columns:200px 1fr;transition:.3s}
-#radio.off{transform:translateY(140%)}
-#radio .vid{width:200px;height:113px;background:#000;position:relative}
-#radio .vid iframe,#radio .vid>div{width:200px;height:113px;display:block;border:0}
-#radio .inf{padding:8px 10px;min-width:0;display:flex;flex-direction:column;gap:2px}
-#radio .inf small{font-family:'Share Tech Mono';font-size:10px;color:var(--r)}
-#radio .inf b{font-family:Orbitron;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#radio .inf span{font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#radio .eq{display:flex;gap:2px;height:16px;align-items:flex-end;margin-top:auto}
-#radio .eq i{width:4px;height:20%;background:var(--y)}
-#radio.playing .eq i{animation:eqb .8s infinite alternate}
-#radio .eq i:nth-child(2n){animation-delay:-.3s;background:var(--c)}#radio .eq i:nth-child(3n){animation-delay:-.55s;background:var(--r)}
-@keyframes eqb{to{height:100%}}
-#radio .ctl{grid-column:1/-1;display:flex;align-items:center;gap:4px;padding:6px 8px;border-top:1px solid var(--line)}
-#radio .ctl button{width:34px;height:28px;border:1px solid var(--line);color:var(--y);font-size:13px}
-#radio .ctl button:hover{background:var(--y);color:#000}
-#radio .ctl input{flex:1;accent-color:var(--r)}
-#radio.min{width:200px;grid-template-columns:200px}
-#radio.min .inf{display:none}
-#radio.min .ctl input{display:none}
-@media(max-width:800px){#radio{left:8px;right:8px;bottom:54px;width:auto;grid-template-columns:120px 1fr}#radio .vid,#radio .vid iframe,#radio .vid>div{width:120px;height:68px}#radio.min{width:120px;right:auto;grid-template-columns:120px}}
+/* ===== MUSIC (player lives in Radioport, HUD only shows a small "now playing" chip) ===== */
+#np{display:none;max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-color:var(--r)!important;color:var(--y)!important}
+#np.show{display:inline-block}
+@media(max-width:700px){#np{max-width:110px}}
+.rp-vid{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line);box-shadow:0 0 40px rgba(255,0,60,.25)}
+.rp-vid iframe,.rp-vid>div{position:absolute;inset:0;width:100%;height:100%;border:0}
+.rp-ctl{display:flex;gap:6px;align-items:center;margin-top:10px}
+.rp-ctl button{width:44px;height:36px;border:1px solid var(--line);color:var(--y)}
+.rp-ctl button:hover{background:var(--y);color:#000}
+.rp-ctl input{flex:1;accent-color:var(--r)}
 #boot .go{display:none;gap:12px;flex-wrap:wrap;justify-content:center}
 #boot.ready .go{display:flex}
 #boot .go button{padding:14px 26px;font-family:Orbitron;font-weight:700;font-size:14px;clip-path:var(--cut);background:var(--r);color:#fff}
 #boot .go button+button{background:#222;color:var(--dim)}
 #boot .go button:hover{background:var(--y);color:#000}
-.disc i{background-size:cover;background-position:center}
 
 /* ===== SHARDS ===== */
 .filters{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
@@ -378,9 +381,9 @@ body.home #rail{display:none}
 .st.on,.st:hover{background:rgba(255,0,60,.12);border-color:var(--r)}
 .st.on b{color:var(--y)}
 .deck{display:flex;flex-direction:column;overflow:hidden}
-.now{position:relative;padding:26px;display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:center;border-bottom:1px solid var(--line)}
-@media(max-width:700px){.now{grid-template-columns:1fr}}
-.disc{width:180px;height:180px;border-radius:50%;background:conic-gradient(from 0deg,#111,#222,#111,#333,#111);display:flex;align-items:center;justify-content:center;animation:spin 3s linear infinite;animation-play-state:paused;box-shadow:0 0 40px rgba(255,0,60,.35)}
+.now{position:relative;padding:22px;display:grid;grid-template-columns:minmax(240px,420px) 1fr;gap:24px;align-items:center;border-bottom:1px solid var(--line)}
+@media(max-width:700px){.now{grid-template-columns:1fr;padding:14px;gap:12px}}
+@media(max-width:1000px){.radio .deck{order:-1}.stations{display:flex;overflow-x:auto;gap:6px;padding:8px}.st{flex:0 0 auto;width:auto;margin:0;border-left:0;border-bottom:3px solid transparent}.st.on,.st:hover{border-bottom-color:var(--r)}.stations .mono{display:none}}
 .disc.play{animation-play-state:running}
 .disc i{width:64px;height:64px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-style:normal;font-family:Orbitron;font-weight:900;color:#000;font-size:13px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -426,11 +429,6 @@ body.home #rail{display:none}
 <div id="wipe"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 <div id="boot"><pre id="bootTxt"></pre><div class="bar"><i id="bootBar"></i></div>
   <div class="go"><button data-music="1">▶ JACK IN · CON MÚSICA</button><button data-music="0">ENTRAR SIN MÚSICA</button></div></div>
-<div id="radio" class="off">
-  <div class="vid"><div id="ytHole"></div></div>
-  <div class="inf"><small id="rwSt">NC FM</small><b id="rwT">—</b><span id="rwA"></span><div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-  <div class="ctl"><button id="rwPrev" title="Anterior">⏮</button><button id="rwPlay" title="Reproducir / pausar">▶</button><button id="rwNext" title="Siguiente">⏭</button><input id="rwVol" type="range" min="0" max="100" value="45" aria-label="Volumen"><button id="rwMin" title="Minimizar">▁</button><button data-go="musica" title="Abrir Radioport">☰</button></div>
-</div>
 
 <div id="hud">
   <span class="logo">NC//ARCHIVE</span>
@@ -438,6 +436,7 @@ body.home #rail{display:none}
   <span class="sp"></span>
   <span class="stat">LOC <b id="loc">NIGHT CITY</b></span>
   <span class="stat">FECHA <b id="clock">--</b></span>
+  <button id="np" title="Pausar / reanudar música"></button>
   <button id="snd" title="Sonidos de interfaz">SFX: OFF</button>
   <button id="back">ESC · MENÚ</button>
 </div>
@@ -464,7 +463,7 @@ body.home #rail{display:none}
 
 <!-- 01 ORIGEN -->
 <section class="scr" id="s-origen" data-name="origen del género" data-acc="#00f0ff">
-  <div class="bgimg" style="background-image:url(https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_7924f64b6e5d586a80418c9896a1c92881a7905b.1920x1080.jpg)"></div>
+  <div class="bgimg" data-d="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_7924f64b6e5d586a80418c9896a1c92881a7905b.1920x1080.jpg" data-m="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900_2x.jpg"></div>
   <div class="ttl"><span class="n">01</span><h2>Cómo nació el cyberpunk</h2><p>high tech, low life · data shards del género antes del juego</p></div>
   <div class="shard" id="shard"></div>
   <div class="scrub" id="scrub"></div>
@@ -521,7 +520,7 @@ body.home #rail{display:none}
 
 <!-- 05 FACCIONES -->
 <section class="scr" id="s-facciones" data-name="facciones" data-acc="#ff003c">
-  <div class="bgimg" style="background-image:url(https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_b529b0abc43f55fc23fe8058eddb6e37c9629a6a.1920x1080.jpg)"></div>
+  <div class="bgimg" data-d="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_b529b0abc43f55fc23fe8058eddb6e37c9629a6a.1920x1080.jpg" data-m="https://static.wikia.nocookie.net/cyberpunk/images/b/ba/Phantom_Liberty_Keyart_Cover_CP2077PL.jpg/revision/latest/scale-to-width-down/900"></div>
   <div class="ttl"><span class="n">05</span><h2>Pandillas y corpos</h2><p>quién manda en cada calle y en cada torre · pasa el cursor</p></div>
   <div class="subh">Pandillas</div>
   <div class="fac" id="gangs"></div>
@@ -592,13 +591,14 @@ body.home #rail{display:none}
 
 <!-- 09 RADIOPORT -->
 <section class="scr" id="s-musica" data-name="radioport" data-acc="#ff003c">
-  <div class="bgimg" style="background-image:url(https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_4eb068b1cf52c91b57157b84bed18a186ed7714b.1920x1080.jpg)"></div>
+  <div class="bgimg" data-d="https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_4eb068b1cf52c91b57157b84bed18a186ed7714b.1920x1080.jpg" data-m="https://static.wikia.nocookie.net/cyberpunk/images/c/c1/Cyberpunk_Edgerunners_Trigger_2.jpg/revision/latest/scale-to-width-down/900"></div>
   <div class="ttl"><span class="n">09</span><h2>Radioport</h2><p>canciones icónicas por temporada y por personaje · clic para sintonizar</p></div>
   <div class="radio">
     <div class="stations panel" id="stations"></div>
     <div class="deck panel">
       <div class="now">
-        <div class="disc" id="disc"><i>NC FM</i></div>
+        <div><div class="rp-vid"><div id="ytHole"></div></div>
+          <div class="rp-ctl"><button id="rwPrev" title="Anterior">⏮</button><button id="rwPlay" title="Reproducir / pausar">▶</button><button id="rwNext" title="Siguiente">⏭</button><input id="rwVol" type="range" min="0" max="100" value="45" aria-label="Volumen"></div></div>
         <div>
           <div class="who" id="nWho"></div>
           <h3 id="nName"></h3>
@@ -645,7 +645,7 @@ $('#snd').onclick=()=>{sfx=!sfx;$('#snd').textContent='SFX: '+(sfx?'ON':'OFF');b
  let i=0;const t=setInterval(()=>{$('#bootTxt').textContent+=L[i++]+'\n';$('#bootBar').style.width=(i/L.length*100)+'%';if(i===L.length){clearInterval(t);$('#boot').classList.add('ready')}},200)})();
 // browsers only allow sound after a click, so the boot screen doubles as the "press start"
 $('#boot').addEventListener('click',e=>{const b=e.target.closest('[data-music]');if(!b)return;
- $('#boot').classList.add('off');$('#radio').classList.remove('off');
+ $('#boot').classList.add('off');
  if(b.dataset.music==='1'){wantPlay=true;if(ytOK)ytp.playVideo();else ytLoad();musicUI()}});
 setInterval(()=>{const d=new Date();$('#clock').textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.2077 ${d.toTimeString().slice(0,8)}`},1000);
 
@@ -684,8 +684,14 @@ $('#menu').addEventListener('mouseover',e=>{if(e.target.closest('button'))blip(1
 
 /* ---------- home bg slideshow ---------- */
 const HOME=[SS(1091500,'ss_2f649b68d579bf87011487d29bc4ccbfdd97d34f'),SS(2138330,'ss_5c4b46c61d7d1d5903835a68eac6582b4e62367f'),SS(1091500,'ss_af2804aa4bf35d4251043744412ce3b359a125ef'),SS(2138330,'ss_2d24468f7ca6dfe4cb79017db119e14f76ad9886'),SS(1091500,'ss_9284d1c5b248726760233a933dbb83757d7d5d95'),SS(1091500,'ss_e5a94665dbfa5a30931cff2f45cdc0ebea9fcebb')];
-$('#homeBg').innerHTML=HOME.map((u,i)=>`<div class="${i?'':'on'}" style="background-image:url(${u})"></div>`).join('');
-let hb=0;setInterval(()=>{if(cur!=='home')return;const d=$$('#homeBg div');d[hb].classList.remove('on');hb=(hb+1)%d.length;d[hb].classList.add('on')},6000);
+// phones get portrait key art so the background is not a thin crop of a 16:9 shot
+const HOME_M=['https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/library_600x900_2x.jpg',W('b/ba/Phantom_Liberty_Keyart_Cover_CP2077PL.jpg',900),W('c/c1/Cyberpunk_Edgerunners_Trigger_2.jpg',900),W('6/68/Cyberpunk_Edgerunners_2_Cover_02_CPEDGEII.jpg',900)];
+const MQ=matchMedia('(max-width:800px)');let hb=0;
+function setBgs(){const L=MQ.matches?HOME_M:HOME;hb=0;
+ $('#homeBg').innerHTML=L.map((u,i)=>`<div class="${i?'':'on'}"><img class="cov" src="${u}" alt=""></div>`).join('');
+ $$('.bgimg').forEach(b=>b.innerHTML=`<img class="cov" src="${MQ.matches?b.dataset.m:b.dataset.d}" alt="">`);}
+setBgs();MQ.addEventListener('change',setBgs);
+setInterval(()=>{if(cur!=='home')return;const d=$$('#homeBg div');d[hb].classList.remove('on');hb=(hb+1)%d.length;d[hb].classList.add('on')},6000);
 
 /* ---------- 01 origen ---------- */
 const ORI=[
@@ -1067,20 +1073,20 @@ function ytMake(){if(ytp)return;const f=document.createElement('iframe');
   onReady:()=>{ytOK=true;ytp.setVolume(+$('#rwVol').value);if(wantPlay)ytp.loadVideoById(curT()[4])},
   onStateChange:e=>{isPlay=e.data===1;if(isPlay)errs=0;if(e.data===0)step(1);musicUI()},
   onError:()=>{if(++errs<Q.length)step(1)}}});}
-function playQ(list,i){Q=list;qi=i;wantPlay=true;$('#radio').classList.remove('off');if(ytOK)ytp.loadVideoById(curT()[4]);else ytLoad();musicUI()}
+function playQ(list,i){Q=list;qi=i;wantPlay=true;if(ytOK)ytp.loadVideoById(curT()[4]);else ytLoad();musicUI()}
 function step(d){qi=(qi+d+Q.length)%Q.length;wantPlay=true;if(ytOK)ytp.loadVideoById(curT()[4]);musicUI()}
 function toggleMusic(){if(!ytOK){wantPlay=!wantPlay;ytLoad();musicUI();return}isPlay?ytp.pauseVideo():ytp.playVideo()}
-function musicUI(){const [w,n,a]=curT();$('#rwSt').textContent='▶ '+w;$('#rwT').textContent=n;$('#rwA').textContent=a;
- $('#rwPlay').textContent=isPlay?'❚❚':'▶';$('#radio').classList.toggle('playing',isPlay);$('#disc').classList.toggle('play',isPlay);renderRadio()}
+function musicUI(){const n=curT()[1],np=$('#np');
+ np.classList.toggle('show',wantPlay||isPlay);np.textContent=(isPlay?'❚❚ ':'▶ ')+n;
+ $('#rwPlay').textContent=isPlay?'❚❚':'▶';renderRadio()}
+$('#np').onclick=toggleMusic;
 $('#rwPlay').onclick=toggleMusic;$('#rwNext').onclick=()=>step(1);$('#rwPrev').onclick=()=>step(-1);
-$('#rwMin').onclick=()=>$('#radio').classList.toggle('min');
 $('#rwVol').oninput=e=>{if(ytOK)ytp.setVolume(+e.target.value)};
 
 function renderRadio(){const [f,,keys]=RAD[rs],L=keys.map(k=>T[k]),[w,n,a,,id]=L[rt]||L[0],live=isPlay?curT()[4]:null;
  $$('.st').forEach((b,i)=>b.classList.toggle('on',i===rs));
  $('#tracks').innerHTML=L.map(([w,n,a,b,id],i)=>`<button class="tr ${i===rt?'on':''}" data-rt="${i}"><span class="ix">${id&&id===live?'<span style="color:var(--r)">♪</span>':String(i+1).padStart(2,'0')}</span><span><b>${id?'▶ ':'↗ '}${n}</b><small>${a} · ${w}</small></span><span class="bdg ${B[b][0]}">${B[b][1]}</span></button>`).join('');
  $('#nWho').textContent=f+' · '+w;$('#nName').textContent=n;$('#nArt').textContent=a;
- const d=$('#disc i');d.style.backgroundImage=id?`url(https://i.ytimg.com/vi/${id}/mqdefault.jpg)`:'';d.textContent=id?'':'NC FM';
  const l=$('#nLink');l.dataset.play=id?'1':'';l.href=yt(n+' '+a);l.textContent=id?(id===live?'❚❚ PAUSAR':'▶ REPRODUCIR AQUÍ'):'↗ ESCUCHAR EN YOUTUBE';}
 function playSel(){const L=RAD[rs][2].map(k=>T[k]),t=L[rt];if(!t[4])return false;const P=L.filter(x=>x[4]);playQ(P,P.indexOf(t));return true}
 $('#stations').addEventListener('click',e=>{const b=e.target.closest('.st');if(b){rs=+b.dataset.rs;rt=0;blip(300,.12);renderRadio()}});

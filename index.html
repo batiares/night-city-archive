@@ -236,24 +236,100 @@ body.home #rail{display:none}
 .fcard:hover .lg{transform:scale(.8) translateY(-30px)}
 .subh{font-family:Orbitron;color:var(--c);font-size:15px;letter-spacing:.15em;text-transform:uppercase;margin:26px 0 12px}
 
-/* ===== CROMO ===== */
-.cw{display:grid;grid-template-columns:320px 1fr;gap:26px}
-@media(max-width:900px){.cw{grid-template-columns:1fr}}
-.bodyfig{position:sticky;top:0;padding:20px}
-.bodyfig svg{width:100%;height:auto;display:block}
-.hp text{font-family:'Share Tech Mono';font-size:11px}
-.hp circle{transition:.2s}
-.hp:hover circle,.hp.on circle{r:10;fill:var(--r)}
-.cwl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;align-content:start}
-.cwi{display:flex;gap:14px;padding:14px;transition:.2s;opacity:.55}
-.cwi.on,.cw:not(.filt) .cwi{opacity:1}
-.cwi.on{border-color:var(--y);box-shadow:0 0 22px rgba(252,238,10,.2)}
-.cwi .ic{flex:0 0 74px;height:74px;background:#000;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.cwi .ic img{max-width:64px;max-height:64px}
-.cwi .s{font-family:'Share Tech Mono';font-size:11px;color:var(--c)}
-.cwi h3{font-size:16px;color:#fff;margin:2px 0 4px}
-.cwi p{font-size:14px;color:#c4c4d6}
-.cwi .bd{font-family:'Share Tech Mono';font-size:11px;color:var(--y);margin-top:4px}
+/* ===== RIPPERDOC (in-game style) ===== */
+#s-cromo{--rr:#ff5f5f;--cc:#5ef6ff;background:radial-gradient(ellipse at 45% 40%,#2a0a0e 0%,#0b0306 55%,#030102 100%)}
+#s-cromo::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,95,95,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,95,95,.05) 1px,transparent 1px);background-size:56px 56px}
+.rd{position:relative;font-family:Rajdhani;text-transform:uppercase;letter-spacing:.06em;color:var(--rr)}
+.rd-top{display:grid;grid-template-columns:auto 1fr auto;gap:30px;align-items:end;border-bottom:1px solid rgba(255,95,95,.35);padding-bottom:14px;margin-bottom:18px}
+@media(max-width:900px){.rd-top{grid-template-columns:1fr}}
+.rd-k{font-size:13px;letter-spacing:.3em;color:var(--cc)}
+.rd-h{font-family:Rajdhani;font-weight:700;font-size:clamp(30px,4vw,46px);color:var(--rr);line-height:1;letter-spacing:.04em}
+.rd-sub{font-size:13px;color:rgba(255,95,95,.65)}
+.rd-capl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.rd-capl b{color:var(--cc);font-weight:600}
+.rd-bar{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;height:14px}
+.rd-bar i{background:rgba(255,95,95,.15);clip-path:polygon(3px 0,100% 0,calc(100% - 3px) 100%,0 100%)}
+.rd-bar i.on{background:var(--cc);box-shadow:0 0 8px var(--cc)}
+.rd-eddy{font-size:22px;font-weight:700;color:var(--y)}
+.rd-eddy small{display:block;font-size:11px;color:rgba(255,95,95,.65);font-weight:500}
+.rd-main{position:relative;display:grid;grid-template-columns:1fr minmax(220px,300px) 1fr;gap:10px;align-items:center}
+.rd-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.rd-col{display:flex;flex-direction:column;gap:16px;position:relative;z-index:1}
+.rd-col.L{align-items:flex-end}
+.rg-h{display:flex;gap:10px;align-items:baseline;font-size:14px;font-weight:600;margin-bottom:6px}
+.rd-col.L .rg-h{justify-content:flex-end}
+.rg-h i{font-style:normal;color:var(--cc);font-size:12px}
+.rg.on .rg-h span{color:var(--y)}
+.rg-s{display:flex;gap:6px}
+.slot{position:relative;width:58px;height:58px;background:rgba(15,4,6,.85);border:1px solid color-mix(in srgb,var(--t,#ff5f5f) 70%,transparent);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);transition:.15s;display:flex;align-items:center;justify-content:center}
+.slot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--t,transparent)}
+.slot img{width:46px;height:46px;object-fit:contain}
+.slot img.ph{object-fit:cover;width:100%;height:100%;opacity:.85}
+.slot em{position:absolute;top:2px;left:4px;font-style:normal;font-size:10px;color:var(--t);font-weight:700}
+.slot.empty{border-style:dashed;border-color:rgba(255,95,95,.35);color:rgba(255,95,95,.5);font-size:22px}
+.slot:hover{background:rgba(255,95,95,.15)}
+.slot.sel{outline:2px solid var(--y);outline-offset:2px;box-shadow:0 0 18px rgba(252,238,10,.5)}
+.rd-body{position:relative;height:min(64vh,620px);min-height:440px}
+.rd-body svg{width:100%;height:100%;display:block}
+.rd-body .scan{position:absolute;left:0;right:0;height:60px;top:0;background:linear-gradient(transparent,rgba(94,246,255,.18),transparent);animation:scan 4s linear infinite;pointer-events:none}
+@keyframes scan{to{top:calc(100% - 60px)}}
+.node{fill:#0b0306;stroke:var(--rr);stroke-width:2;transition:.2s}
+.node.on{fill:var(--y);stroke:var(--y);filter:drop-shadow(0 0 6px var(--y))}
+.rd-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:20px}
+@media(max-width:900px){.rd-bottom{grid-template-columns:1fr}}
+.rd-pan{background:rgba(15,4,6,.85);border:1px solid rgba(255,95,95,.35);clip-path:var(--cut);padding:16px}
+.rd-pan h4{font-family:Rajdhani;font-size:14px;font-weight:700;letter-spacing:.2em;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rd-pan h4 button{font-size:12px;border:1px solid rgba(255,95,95,.5);padding:3px 10px;color:var(--rr);letter-spacing:.1em}
+.rd-pan h4 button:hover{background:var(--rr);color:#000}
+.inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px}
+.inv-it{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;text-align:left;padding:6px;border:1px solid rgba(255,95,95,.18);border-left:3px solid var(--t);text-transform:none;letter-spacing:0}
+.inv-it:hover{background:rgba(255,95,95,.1)}
+.inv-it.eq{background:rgba(94,246,255,.07)}
+.inv-it .ic{width:52px;height:52px;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.inv-it .ic img{max-width:46px;max-height:46px;object-fit:contain}
+.inv-it b{display:block;color:#fff;font-size:15px}
+.inv-it small{font-size:12px;color:var(--t);text-transform:uppercase;letter-spacing:.08em}
+.inv-it i{font-style:normal;font-size:11px;color:var(--cc)}
+.tip{border-top:4px solid var(--t);text-transform:none;letter-spacing:0}
+.tip .tr1{display:flex;gap:14px;align-items:center}
+.tip .big{width:86px;height:86px;flex:0 0 86px;background:#000;border:1px solid var(--t);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tip .big img{max-width:76px;max-height:76px;object-fit:contain}
+.tip h3{font-family:Rajdhani;font-weight:700;font-size:26px;color:#fff;letter-spacing:.02em}
+.tip .tier{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;background:var(--t);color:#000;letter-spacing:.12em;text-transform:uppercase}
+.tip .cat{font-size:12px;color:var(--rr);letter-spacing:.15em;text-transform:uppercase;margin-top:4px}
+.tip p{margin-top:12px;color:#e6d6d6;font-size:16px}
+.tip .bd{margin-top:10px;font-size:13px;color:var(--cc);letter-spacing:.1em;text-transform:uppercase}
+.rd-note{font-size:12px;color:rgba(255,95,95,.55);margin-top:10px;text-transform:none;letter-spacing:0}
+@media(max-width:900px){.rd-main{grid-template-columns:1fr}.rd-body{height:300px;min-height:0;order:-1}.rd-col.L{align-items:flex-start}.rd-col.L .rg-h{justify-content:flex-start}.rd-lines{display:none}}
+
+/* ===== MUSIC WIDGET ===== */
+#radio{position:fixed;right:16px;bottom:16px;z-index:70;width:360px;background:rgba(8,6,12,.92);border:1px solid rgba(255,0,60,.5);clip-path:var(--cut);backdrop-filter:blur(8px);display:grid;grid-template-columns:200px 1fr;transition:.3s}
+#radio.off{transform:translateY(140%)}
+#radio .vid{width:200px;height:113px;background:#000;position:relative}
+#radio .vid iframe,#radio .vid>div{width:200px;height:113px;display:block;border:0}
+#radio .inf{padding:8px 10px;min-width:0;display:flex;flex-direction:column;gap:2px}
+#radio .inf small{font-family:'Share Tech Mono';font-size:10px;color:var(--r)}
+#radio .inf b{font-family:Orbitron;font-size:12px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#radio .inf span{font-size:13px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#radio .eq{display:flex;gap:2px;height:16px;align-items:flex-end;margin-top:auto}
+#radio .eq i{width:4px;height:20%;background:var(--y)}
+#radio.playing .eq i{animation:eqb .8s infinite alternate}
+#radio .eq i:nth-child(2n){animation-delay:-.3s;background:var(--c)}#radio .eq i:nth-child(3n){animation-delay:-.55s;background:var(--r)}
+@keyframes eqb{to{height:100%}}
+#radio .ctl{grid-column:1/-1;display:flex;align-items:center;gap:4px;padding:6px 8px;border-top:1px solid var(--line)}
+#radio .ctl button{width:34px;height:28px;border:1px solid var(--line);color:var(--y);font-size:13px}
+#radio .ctl button:hover{background:var(--y);color:#000}
+#radio .ctl input{flex:1;accent-color:var(--r)}
+#radio.min{width:200px;grid-template-columns:200px}
+#radio.min .inf{display:none}
+#radio.min .ctl input{display:none}
+@media(max-width:800px){#radio{left:8px;right:8px;bottom:54px;width:auto;grid-template-columns:120px 1fr}#radio .vid,#radio .vid iframe,#radio .vid>div{width:120px;height:68px}#radio.min{width:120px;right:auto;grid-template-columns:120px}}
+#boot .go{display:none;gap:12px;flex-wrap:wrap;justify-content:center}
+#boot.ready .go{display:flex}
+#boot .go button{padding:14px 26px;font-family:Orbitron;font-weight:700;font-size:14px;clip-path:var(--cut);background:var(--r);color:#fff}
+#boot .go button+button{background:#222;color:var(--dim)}
+#boot .go button:hover{background:var(--y);color:#000}
+.disc i{background-size:cover;background-position:center}
 
 /* ===== SHARDS ===== */
 .filters{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
@@ -348,7 +424,13 @@ body.home #rail{display:none}
 <body class="home">
 <div class="fx"></div>
 <div id="wipe"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-<div id="boot"><pre id="bootTxt"></pre><div class="bar"><i id="bootBar"></i></div></div>
+<div id="boot"><pre id="bootTxt"></pre><div class="bar"><i id="bootBar"></i></div>
+  <div class="go"><button data-music="1">▶ JACK IN · CON MÚSICA</button><button data-music="0">ENTRAR SIN MÚSICA</button></div></div>
+<div id="radio" class="off">
+  <div class="vid"><div id="ytHole"></div></div>
+  <div class="inf"><small id="rwSt">NC FM</small><b id="rwT">—</b><span id="rwA"></span><div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="ctl"><button id="rwPrev" title="Anterior">⏮</button><button id="rwPlay" title="Reproducir / pausar">▶</button><button id="rwNext" title="Siguiente">⏭</button><input id="rwVol" type="range" min="0" max="100" value="45" aria-label="Volumen"><button id="rwMin" title="Minimizar">▁</button><button data-go="musica" title="Abrir Radioport">☰</button></div>
+</div>
 
 <div id="hud">
   <span class="logo">NC//ARCHIVE</span>
@@ -448,20 +530,49 @@ body.home #rail{display:none}
 </section>
 
 <!-- 06 CROMO -->
-<section class="scr" id="s-cromo" data-name="ripperdoc · cyberware" data-acc="#00f0ff">
-  <div class="bgimg" style="background-image:url(https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_8640d9db74f7cad714f6ecfb0e1aceaa3f887e58.1920x1080.jpg)"></div>
-  <div class="ttl"><span class="n">06</span><h2>Ripperdoc</h2><p>cyberware icónico · toca una zona del cuerpo</p></div>
-  <div class="cw" id="cw">
-    <div class="bodyfig panel">
-      <svg viewBox="0 0 200 420">
-        <g fill="rgba(0,240,255,.05)" stroke="#00f0ff" stroke-width="1.5" opacity=".8">
-          <circle cx="100" cy="45" r="28"/><path d="M70 85 h60 l20 120 h-20 l-10 -80 v100 l10 170 h-25 l-15 -150 l-15 150 h-25 l10 -170 v-100 l-10 80 h-20 z"/>
-        </g>
-        <g stroke="#00f0ff" stroke-width=".5" opacity=".35"><path d="M100 73v300M80 120h40M78 160h44M80 200h40"/></g>
-        <g id="hot"></g>
-      </svg>
+<section class="scr" id="s-cromo" data-name="ripperdoc · cyberware" data-acc="#ff5f5f">
+  <div class="rd">
+    <div class="rd-top">
+      <div><div class="rd-k">RIPPERDOC</div><div class="rd-h">VIKTOR VEKTOR</div><div class="rd-sub">Clínica · Watson, Little China</div></div>
+      <div><div class="rd-capl"><span>Slots de cyberware</span><b id="capN"></b></div><div class="rd-bar" id="capBar"></div></div>
+      <div class="rd-eddy">€$ 20,770<small>EDDIES</small></div>
     </div>
-    <div class="cwl" id="cwl"></div>
+    <div class="rd-main" id="rdMain">
+      <svg class="rd-lines" id="rdLines"></svg>
+      <div class="rd-col L" id="rdL"></div>
+      <div class="rd-body">
+        <svg viewBox="0 0 300 640" id="rdBody">
+          <defs><linearGradient id="skin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5f5f" stop-opacity=".16"/><stop offset="1" stop-color="#ff5f5f" stop-opacity=".03"/></linearGradient></defs>
+          <g fill="url(#skin)" stroke="#ff5f5f" stroke-width="1.4" stroke-linejoin="round">
+            <ellipse cx="150" cy="68" rx="32" ry="42"/>
+            <path d="M138 108h24v24h-24z"/>
+            <path d="M100 140Q150 124 200 140L214 250Q206 300 192 332H108Q94 300 86 250Z"/>
+            <path d="M108 332H192L198 372H102Z"/>
+            <path d="M100 144L82 150L60 252L48 362L62 364L76 258L96 192Z"/>
+            <path d="M200 144L218 150L240 252L252 362L238 364L224 258L204 192Z"/>
+            <ellipse cx="55" cy="384" rx="11" ry="20"/><ellipse cx="245" cy="384" rx="11" ry="20"/>
+            <path d="M104 372H148L143 500L139 612H117L114 500Z"/>
+            <path d="M152 372H196L186 500L183 612H161L157 500Z"/>
+            <path d="M117 612H139L142 628H108Z"/><path d="M161 612H183L192 628H158Z"/>
+          </g>
+          <g stroke="#5ef6ff" stroke-width=".8" fill="none" opacity=".55">
+            <path d="M150 132V330"/><path d="M118 165Q150 178 182 165M114 190Q150 204 186 190M112 215Q150 230 188 215M114 240Q150 254 186 240"/>
+            <path d="M126 48Q150 36 174 48M122 62Q150 52 178 62"/><path d="M136 70h10M154 70h10"/>
+            <path d="M150 150L96 192L70 300L55 380M150 150L204 192L230 300L245 380" stroke-dasharray="3 4"/>
+            <path d="M150 330L126 372L128 500L128 600M150 330L174 372L172 500L172 600" stroke-dasharray="3 4"/>
+            <circle cx="168" cy="192" r="12"/><path d="M168 180v24M156 192h24"/>
+          </g>
+          <g id="rdNodes"></g>
+        </svg>
+        <div class="scan"></div>
+      </div>
+      <div class="rd-col R" id="rdR"></div>
+    </div>
+    <div class="rd-bottom">
+      <div class="rd-pan"><h4><span id="invH"></span><span><button id="rdUn">Desinstalar</button> <button id="rdReset">Build original</button></span></h4><div class="inv" id="inv"></div></div>
+      <div class="rd-pan tip" id="tip"></div>
+    </div>
+    <p class="rd-note">Build de ejemplo. Toca un slot para ver el cyberware compatible e instalarlo. En el juego (2.0) casi todo el cromo existe en varios tiers, del 1 al 5.</p>
   </div>
 </section>
 
@@ -531,7 +642,11 @@ $('#snd').onclick=()=>{sfx=!sfx;$('#snd').textContent='SFX: '+(sfx?'ON':'OFF');b
 
 /* ---------- boot ---------- */
 (()=>{const L=['> ARASAKA-OS v20.77 ........................ OK','> montando relic.sys ....................... OK','> enlazando NCPD sat-grid ................... OK','> bypass ICE ................................ OK','> cargando braindances ...................... OK','> bienvenido, choom.'];
- let i=0;const t=setInterval(()=>{$('#bootTxt').textContent+=L[i++]+'\n';$('#bootBar').style.width=(i/L.length*100)+'%';if(i===L.length){clearInterval(t);setTimeout(()=>$('#boot').classList.add('off'),400)}},200)})();
+ let i=0;const t=setInterval(()=>{$('#bootTxt').textContent+=L[i++]+'\n';$('#bootBar').style.width=(i/L.length*100)+'%';if(i===L.length){clearInterval(t);$('#boot').classList.add('ready')}},200)})();
+// browsers only allow sound after a click, so the boot screen doubles as the "press start"
+$('#boot').addEventListener('click',e=>{const b=e.target.closest('[data-music]');if(!b)return;
+ $('#boot').classList.add('off');$('#radio').classList.remove('off');
+ if(b.dataset.music==='1'){wantPlay=true;if(ytOK)ytp.playVideo();else ytLoad();musicUI()}});
 setInterval(()=>{const d=new Date();$('#clock').textContent=`${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.2077 ${d.toTimeString().slice(0,8)}`},1000);
 
 /* ---------- router ---------- */
@@ -554,6 +669,7 @@ function show(k){
     $$('#rail button').forEach(b=>b.classList.toggle('on',b.dataset.go===k));
     el.scrollTop=0;cur=k;
     if(k!=='trailers')$('#video').pause();
+    if(k==='cromo')setTimeout(drawRD,60);
     w.className='out';setTimeout(()=>{w.className='';busy=false},480);
   },300);
 }
@@ -766,28 +882,95 @@ const C=[
  ['NetWatch','—','#b14bff','0/06/NetWatch_Logo_CP2077.png','La policía de la Red. Cuidan el Muro Negro.'],
  ['Zetatech','—','#00f0ff','b/b8/Zetatech_Logo_CP2077.png','Cyberware y tecnología.'],
  ['Kiroshi','Japón','#fcee0a','f/fd/Kiroshi_Logo_CPRED.png','Los ojos cibernéticos que todos usan.'],
- ['Delamain','Night City','#c9a76b','5/59/Delamain_Corporation_Logo_CP2077.png','Taxis con IA… y la IA tiene sus propios planes.']];
+ ['Delamain','Night City','#c9a76b','5/59/Delamain_Corporation_Logo_CP2077.png','Taxis con IA… y la IA tiene sus propios planes.'],
+ ['Orbital Air','Órbita · Luna','#5ef6ff','8/8b/Orbital_Air_Logo_CP2077.png','Vuelos espaciales: lleva gente y carga a las estaciones orbitales y a la Luna.'],
+ ['Night Corp','Night City','#b14bff','3/38/Night_Corp_Logo_CP2077.png','Corporación misteriosa ligada al legado de Richard Night, fundador de la ciudad.'],
+ ['Dynalar','—','#ff2bd6','3/3a/Dynalar_Logo_CP2077.png','Armas y cyberware, incluidos sus propios Sandevistan.'],
+ ['Raven Microcybernetics','—','#3dff9a','a/af/Raven_Microcybernetics_Logo_CPRED.png','Cyberdecks y cyberware de alta gama.'],
+ ['Rocklin Augmentics','—','#ff7b00','0/08/Rocklin_Augmentics_Logo_CPRED.png','Prótesis y cyberware de reemplazo.'],
+ ['Tsunami','—','#00f0ff','c/cc/Tsunami_Logo_CP2077.jpg','Armas de alta tecnología como el rifle Nekomata.'],
+ ['Kendachi','Japón','#ff003c','c/c1/Kendachi_Logo_CP2077.png','Katanas y armas blancas de alta tecnología.'],
+ ['Budget Arms','—','#fcee0a','a/aa/Budget_Arms_Logo_CP2077.png','Armas baratas y poco confiables… pero disparan.'],
+ ['Constitutional Arms','EUA','#3dff9a','8/88/Constitutional_Arms_Logo_CP2077.png','Fabricante estadounidense de armas.'],
+ ['Midnight Arms','—','#b14bff','1/1d/Midnight_Arms_Logo_CP2077.png','Fabricante de armas.'],
+ ['Network 54','Medios','#ff003c','8/84/Network_54_Logo_CP2077.png','La cadena de noticias y entretenimiento de N54.'],
+ ['Lazarus','—','#8b8ba3','b/b7/Lazarus_Logo_CPRED.png','Contratistas militares y mercenarios corporativos.'],
+ ['SovOil','Rusia','#ff7b00','1/1b/SovOil_Database_CP2077PL.png','Petrolera de origen soviético; aparece en Phantom Liberty.']];
 const fcard=([n,z,k,img,p])=>`<div class="fcard" tabindex="0" style="--k:${k}"><div class="lg"><img loading="lazy" src="${W(img,300)}" alt="${n}"></div><div class="nm">${n}</div><div class="ov"><small>${z}</small><h3>${n}</h3><p>${p}</p></div></div>`;
 $('#gangs').innerHTML=G.map(fcard).join('');$('#corps').innerHTML=C.map(fcard).join('');
 
-/* ---------- 06 cromo ---------- */
-const CW=[
- ['os','Sistema operativo','Sandevistan','Ralentiza el tiempo a tu alrededor. El implante de David en Edgerunners.','Reflejos / sigilo','a/af/Neuralport_%26_Sandevistan_CPEDGE.jpg'],
- ['os','Sistema operativo','Berserk','Más daño cuerpo a cuerpo y resistencia por un rato.','Cuerpo / tanque',null],
- ['os','Sistema operativo','Cyberdeck','Habilita quickhacks: freír, cegar, sobrecalentar y apagar enemigos.','Netrunner',null],
- ['os','Sistema nervioso','Kerenzikov','Ralentiza el tiempo al apuntar mientras esquivas o te deslizas.','Pistolas / escopetas','1/1d/Kerenzikov.png'],
- ['arms','Brazos','Mantis Blades','Cuchillas retráctiles para saltar y cortar. Salieron en el teaser de 2013.','Reflejos','8/89/MantisBlades.png'],
- ['arms','Brazos','Gorilla Arms','Puñetazos brutales y abrir puertas a la fuerza.','Cuerpo','3/35/StrongArms.png'],
- ['arms','Brazos','Monowire','Látigo de alambre que corta y puede propagar quickhacks.','Netrunner híbrido','d/d6/NanoWires.png'],
- ['arms','Brazos','Projectile Launch System','Un lanzamisiles dentro del brazo.','Técnica','c/cf/ProjectileLauncher.png'],
- ['head','Ojos','Kiroshi Optics','Escaneo, zoom y marcado de enemigos.','Todas las builds','f/fd/Kiroshi_Logo_CPRED.png'],
- ['legs','Piernas','Reinforced Tendons','Doble salto: la movilidad que cambia todo.','Todas las builds',null],
- ['legs','Piernas','Fortified Ankles','Supersalto cargado y aterrizajes con impacto.','Cuerpo',null]];
-const SP={head:[100,45,'OJOS'],os:[100,125,'OS / NERVIOS'],arms:[152,190,'BRAZOS'],legs:[100,330,'PIERNAS']};
-$('#hot').innerHTML=Object.entries(SP).map(([k,[x,y,l]])=>`<g class="hp" data-p="${k}"><circle cx="${x}" cy="${y}" r="7" fill="#fcee0a" data-p="${k}"/><text x="${x+14}" y="${y+4}" fill="#fcee0a" data-p="${k}">${l}</text></g>`).join('');
-$('#cwl').innerHTML=CW.map(([p,s,n,d,b,img])=>`<div class="cwi panel" data-p="${p}"><div class="ic">${img?`<img loading="lazy" src="${W(img,200)}" alt="">`:`<span class="mono" style="color:var(--c);font-size:22px">${n[0]}</span>`}</div><div><div class="s">${s}</div><h3>${n}</h3><p>${d}</p><div class="bd">BUILD: ${b}</div></div></div>`).join('');
-$('#hot').addEventListener('click',e=>{const p=e.target.dataset.p;if(!p)return;blip(500);$('#cw').classList.add('filt');
- $$('.hp').forEach(h=>h.classList.toggle('on',h.dataset.p===p));$$('.cwi').forEach(c=>c.classList.toggle('on',c.dataset.p===p))});
+/* ---------- 06 ripperdoc ---------- */
+const TIERC={1:'#a8a8a8',2:'#3dff9a',3:'#2b9bff',4:'#b14bff',5:'#ff9a00'},RN=['','I','II','III','IV','V'];
+// key, label, slots, column, anchor on body svg (300x640)
+const RCATS=[['frontal','Corteza frontal',3,'L',[150,52]],['arms','Brazos',1,'L',[70,240]],['nervous','Sistema nervioso',3,'L',[134,250]],['skeleton','Esqueleto',2,'L',[150,300]],['hands','Manos',2,'L',[55,384]],
+ ['face','Cara · Ojos',1,'R',[160,70]],['os','Sistema operativo',1,'R',[150,150]],['circ','Sistema circulatorio',3,'R',[168,192]],['integ','Sistema integumentario',3,'R',[210,262]],['legs','Piernas',1,'R',[172,520]]];
+const RI={ // id: [cat, name, tier, icon, desc, build]
+ exdisk:['frontal','Ex-Disk',3,'0/05/ExDisk.png','Aumenta la RAM máxima de tu cyberdeck.','Netrunner'],
+ ram:['frontal','RAM Upgrade',2,'7/71/RamUpgrade.png','Más RAM y recuperación más rápida.','Netrunner'],
+ camillo:['frontal','Camillo RAM Manager',4,'d/df/CamilloRamManager.png','Recupera RAM de golpe cuando se te acaba.','Netrunner'],
+ mecha:['frontal','Mechatronic Core',3,'a/ab/MechatronicCore.png','Más daño contra drones, robots y mechs.','Todas'],
+ sande:['os','Sandevistan',5,'a/af/Neuralport_%26_Sandevistan_CPEDGE.jpg','Ralentiza el tiempo a tu alrededor. El implante de David en Edgerunners.','Reflejos'],
+ berserk:['os','Berserk',4,null,'Más daño cuerpo a cuerpo y resistencia por un tiempo limitado.','Cuerpo'],
+ paraline:['os','Militech Paraline',3,'2/23/MilitechParaline.png','Cyberdeck equilibrado para empezar a hackear.','Netrunner'],
+ netdriver:['os','NetWatch Netdriver',4,'d/d1/NetWatchNetdriver.png','Cyberdeck fabricado por la policía de la Red.','Netrunner'],
+ rippler:['os','Tetratronic Rippler',5,'5/5d/TetratronicRippler.png','Cyberdeck de alta gama para netrunners avanzados.','Netrunner'],
+ kiroshi:['face','Kiroshi Optics',4,'f/fd/Kiroshi_Logo_CPRED.png','Zoom, escaneo y marcado de enemigos. La base de cualquier build.','Todas'],
+ mantis:['arms','Mantis Blades',5,'8/89/MantisBlades.png','Cuchillas retráctiles para saltar y cortar. Salieron en el teaser de 2013.','Reflejos'],
+ gorilla:['arms','Gorilla Arms',4,'3/35/StrongArms.png','Puñetazos brutales y abrir puertas a la fuerza.','Cuerpo'],
+ mono:['arms','Monowire',4,'d/d6/NanoWires.png','Látigo de alambre que corta y puede propagar quickhacks.','Netrunner'],
+ pls:['arms','Projectile Launch System',3,'c/cf/ProjectileLauncher.png','Un lanzamisiles dentro del brazo.','Técnica'],
+ smart:['hands','Smart Link',3,'8/87/SmartLink.png','Permite que las armas inteligentes fijen y persigan objetivos.','Armas smart'],
+ ballistic:['hands','Ballistic Coprocessor',3,'5/52/PowerGrip.png','Mejora los rebotes de las armas de poder.','Armas de poder'],
+ titanium:['skeleton','Titanium Bones',2,'4/49/TitaniumInfusedBones.png','Huesos reforzados: más capacidad de carga.','Todas'],
+ marrow:['skeleton','Dense Marrow',3,'c/c9/DenseMarrow.png','Golpes cuerpo a cuerpo más fuertes.','Cuerpo'],
+ keren:['nervous','Kerenzikov',4,'1/1d/Kerenzikov.png','Ralentiza el tiempo al apuntar mientras esquivas o te deslizas.','Pistolas / escopetas'],
+ synaptic:['nervous','Synaptic Accelerator',3,'a/a4/SynapticAccelerator.png','Ralentiza el tiempo cuando un enemigo te detecta.','Sigilo'],
+ reflex:['nervous','Reflex Tuner',3,'d/d4/ReflexRecorder.png','Ralentiza el tiempo cuando tu salud baja.','Supervivencia'],
+ neofiber:['nervous','Neofiber',2,null,'Mejora tu movilidad y evasión.','Reflejos'],
+ biomon:['circ','Biomonitor',3,'5/53/Biomonitor.png','Te cura automáticamente cuando tu salud está crítica.','Supervivencia'],
+ pump:['circ','Blood Pump',3,'d/d9/BloodPump.png','Potencia tu curación.','Supervivencia'],
+ heart:['circ','Second Heart',5,'1/1e/SecondHeart.png','Te revive una vez cuando mueres.','Supervivencia'],
+ adren:['circ','Adrenaline Booster',2,'c/c7/StaminaRegenBooster.png','Más stamina y recuperación.','Todas'],
+ subderm:['integ','Subdermal Armor',4,'8/81/BoringPlating.png','Placas bajo la piel: más armadura.','Tanque'],
+ camo:['integ','Optical Camo',4,'e/ec/OpticalCamo.png','Te vuelve invisible por unos segundos.','Sigilo'],
+ tendons:['legs','Reinforced Tendons',4,'5/55/BoostedTendons.png','Doble salto: la movilidad que cambia todo.','Todas'],
+ ankles:['legs','Fortified Ankles',4,'9/96/ReinforcedMuscles.png','Supersalto cargado y aterrizajes con impacto.','Cuerpo'],
+ jenkins:['legs','Jenkins’ Tendons',3,'6/65/JenkinsTendons.png','Corres más rápido.','Todas']};
+const RBUILD={frontal:['exdisk','ram',null],arms:['mantis'],nervous:['keren','synaptic',null],skeleton:['titanium','marrow'],hands:['smart',null],face:['kiroshi'],os:['sande'],circ:['biomon','heart',null],integ:['subderm','camo',null],legs:['tendons']};
+let REQ=JSON.parse(JSON.stringify(RBUILD)),rsel={c:'os',i:0},rhover=null;
+const ricon=(id,w=120)=>{const it=RI[id];return it[3]?`<img class="${it[3].endsWith('.jpg')?'ph':''}" src="${W(it[3],w)}" alt="">`:`<span style="font-weight:700;font-size:22px;color:${TIERC[it[2]]}">${it[1][0]}</span>`};
+const rlabel=c=>RCATS.find(x=>x[0]===c)[1];
+function renderRD(){
+ const grp=([k,l,n])=>{const eq=REQ[k];return `<div class="rg ${rsel.c===k?'on':''}" data-rc="${k}"><div class="rg-h"><span>${l}</span><i>${eq.filter(Boolean).length}/${n}</i></div><div class="rg-s">${eq.map((id,i)=>{const s=rsel.c===k&&rsel.i===i?'sel':'';
+   return id?`<button class="slot ${s}" data-c="${k}" data-i="${i}" style="--t:${TIERC[RI[id][2]]}" title="${RI[id][1]}"><em>${RN[RI[id][2]]}</em>${ricon(id)}</button>`:`<button class="slot empty ${s}" data-c="${k}" data-i="${i}" title="Slot vacío">+</button>`}).join('')}</div></div>`};
+ $('#rdL').innerHTML=RCATS.filter(c=>c[3]==='L').map(grp).join('');
+ $('#rdR').innerHTML=RCATS.filter(c=>c[3]==='R').map(grp).join('');
+ $('#rdNodes').innerHTML=RCATS.map(([k,,,,[x,y]])=>`<circle class="node ${rsel.c===k?'on':''}" cx="${x}" cy="${y}" r="5"/>`).join('');
+ const used=Object.values(REQ).flat().filter(Boolean).length,total=RCATS.reduce((a,c)=>a+c[2],0);
+ $('#capN').textContent=used+' / '+total;$('#capBar').style.gridTemplateColumns=`repeat(${total},1fr)`;
+ $('#capBar').innerHTML=Array.from({length:total},(_,i)=>`<i class="${i<used?'on':''}"></i>`).join('');
+ const cur=REQ[rsel.c][rsel.i];
+ $('#invH').textContent='Cyberware disponible · '+rlabel(rsel.c);
+ $('#inv').innerHTML=Object.entries(RI).filter(([,v])=>v[0]===rsel.c).map(([id,v])=>`<button class="inv-it ${REQ[rsel.c].includes(id)?'eq':''}" data-id="${id}" style="--t:${TIERC[v[2]]}"><span class="ic">${ricon(id)}</span><span><b>${v[1]}</b><small>Tier ${RN[v[2]]} · ${v[5]}</small></span>${REQ[rsel.c].includes(id)?'<i>INSTALADO</i>':''}</button>`).join('');
+ renderTip(rhover||cur);drawRD();}
+function renderTip(id){const t=$('#tip');
+ if(!id){t.style.setProperty('--t','#ff5f5f');t.innerHTML=`<h3>Slot vacío</h3><div class="cat">${rlabel(rsel.c)}</div><p>Elige cyberware del inventario para instalarlo aquí.</p>`;return}
+ const [c,n,tr,,d,b]=RI[id];t.style.setProperty('--t',TIERC[tr]);
+ t.innerHTML=`<div class="tr1"><div class="big">${ricon(id,200)}</div><div><span class="tier">Tier ${RN[tr]}</span><h3>${n}</h3><div class="cat">${rlabel(c)}</div></div></div><p>${d}</p><div class="bd">Build: ${b}${REQ[c].includes(id)?' · instalado':''}</div>`;}
+function drawRD(){const sv=$('#rdLines'),main=$('#rdMain');if(cur!=='cromo'||innerWidth<=900){sv.innerHTML='';return}
+ const mr=main.getBoundingClientRect(),m=$('#rdBody').getScreenCTM();if(!m)return;
+ sv.setAttribute('viewBox',`0 0 ${mr.width} ${mr.height}`);
+ sv.innerHTML=RCATS.map(([k,,,side,[ax,ay]])=>{const g=$(`.rg[data-rc="${k}"] .rg-h`);if(!g)return'';const r=g.getBoundingClientRect();
+  const sx=(side==='L'?r.right+8:r.left-8)-mr.left,sy=r.top+r.height/2-mr.top,px=m.a*ax+m.e-mr.left,py=m.d*ay+m.f-mr.top,bx=sx+(side==='L'?24:-24),on=rsel.c===k;
+  return `<path d="M${sx} ${sy}H${bx}L${px} ${py}" fill="none" stroke="${on?'#fcee0a':'rgba(255,95,95,.45)'}" stroke-width="${on?1.6:1}"/>`}).join('');}
+$('#s-cromo').addEventListener('click',e=>{const s=e.target.closest('.slot');if(s){rsel={c:s.dataset.c,i:+s.dataset.i};rhover=null;blip(600);renderRD();return}
+ const it=e.target.closest('.inv-it');if(it){const id=it.dataset.id,eq=REQ[rsel.c],j=eq.indexOf(id);if(j>=0)eq[j]=eq[rsel.i];eq[rsel.i]=id;rhover=null;blip(1300,.09);renderRD()}});
+$('#inv').addEventListener('mouseover',e=>{const it=e.target.closest('.inv-it');if(it&&rhover!==it.dataset.id){rhover=it.dataset.id;renderTip(rhover)}});
+$('#inv').addEventListener('mouseleave',()=>{rhover=null;renderTip(REQ[rsel.c][rsel.i])});
+$('#rdUn').onclick=()=>{REQ[rsel.c][rsel.i]=null;blip(300,.1);renderRD()};
+$('#rdReset').onclick=()=>{REQ=JSON.parse(JSON.stringify(RBUILD));blip(900);renderRD()};
+addEventListener('resize',drawRD);
+renderRD();
 
 /* ---------- 07 shards ---------- */
 const SH=[
@@ -836,23 +1019,75 @@ renderER(1);
 
 /* ---------- 09 radioport ---------- */
 const B={of:['b-of','OFICIAL'],mi:['b-mi','MISIÓN'],op:['b-op','VIBE']};
+// [who, song, artist, badge, official YouTube id (null = only a search link)]
+const T={
+ irw:['Lucy','I Really Want to Stay at Your House','Rosa Walton & Hallie Coggins','of','KvMY1uzSC1E'],
+ pl:['Phantom Liberty · Tema','Phantom Liberty','Dawid Podsiadło & P.T. Adamczyk','of','u15tEo0wsQI'],
+ nfaV:['V · Launch trailer','Never Fade Away (cover)','P.T. Adamczyk & Olga Jankowska','of','P4bKZT_Eg4A'],
+ rebel:['V · Tema principal','The Rebel Path','P.T. Adamczyk','of','EegPbRtmzXY'],
+ chip:['Johnny Silverhand','Chippin’ In','SAMURAI','of','Igq3d6XA75Y'],
+ nfa:['Alt Cunningham','Never Fade Away','SAMURAI','of','AN1RJF55NXI'],
+ dog:['SAMURAI','Black Dog','SAMURAI','of','Es4N8Hwjoac'],
+ sup:['SAMURAI','A Like Supreme','SAMURAI','of',null],
+ buck:['SAMURAI','The Ballad of Buck Ravers','SAMURAI','of','XiHw7MrTx30'],
+ arch:['SAMURAI','Archangel','SAMURAI','of','hLwyq4Lrupw'],
+ fire:['Opening T1','This Fffire','Franz Ferdinand','of','mH2wmyeiIpA'],
+ lyd:['David · Ending T1','Let You Down','Dawid Podsiadło','of','BnnbP7pCIvQ'],
+ wrt:['Rebecca','Who’s Ready for Tomorrow','Rat Boy & IBDY','op','jLXTBbMRxK8'],
+ rad:['Maine','Resist and Disorder','Rezodrone','op','XfUo2mPYQ2E'],
+ cure:['Opening T2','10:15 Saturday Night','The Cure','of','9saQnQQApVM'],
+ wat:['Ending T2','Watson','Petite Meller ft. Oslo Green','of','c8vjJ43bCVY'],
+ high:['Edgerunners 2','High Forever','Petite Meller','of','661i3UHZGzQ'],
+ rico:['Insert song T2','You Can’t Run From Me','Rico Nasty','of','K89Lw83Qvgw'],
+ rusty:['Insert song T2','A Rusty Dream','DOUDOU','of','XcKvndexQYE'],
+ pon:['Kerry Eurodyne','PonPon Shit','Us Cracks ft. Kerry Eurodyne','of','8CwFNFGSQV0'],
+ heroes:['Jackie Welles','Heroes','David Bowie','mi',null],riders:['Panam Palmer','Riders on the Storm','The Doors','mi',null],
+ pyr:['Judy Alvarez','Pyramid Song','Radiohead','mi',null],law:['River Ward','I Fought the Law','The Clash','mi',null],
+ street:['Goro Takemura','Down on the Street','The Stooges','mi',null],epi:['Delamain','Epistrophy','Thelonious Monk','mi',null],
+ dmg:['Songbird','Somewhat Damaged','Nine Inch Nails','mi',null],luc:['Solomon Reed','Lucretia My Reflection','The Sisters of Mercy','mi',null]};
 const RAD=[
- ['89.7 EDGE FM','Edgerunners · T1',[['Opening','This Fffire','Franz Ferdinand','of'],['David · Ending','Let You Down','Dawid Podsiadło','of'],['Lucy','I Really Want to Stay at Your House','Rosa Walton & Hallie Coggins','of'],['Rebecca','Who’s Ready for Tomorrow','Rat Boy & IBDY','op'],['Maine','Resist and Disorder','Rezodrone','op']]],
- ['92.1 EDGE II','Edgerunners 2',[['Opening','10:15 Saturday Night','The Cure','of'],['Ending','Watson','Petite Meller','of'],['Insert song','You Can’t Run From Me','Rico Nasty','of'],['Insert song','A Rusty Dream','DOUDOU','of']]],
- ['98.7 SAMURAI','La banda de Johnny',[['SAMURAI','Chippin’ In','SAMURAI','of'],['Alt Cunningham','Never Fade Away','SAMURAI','of'],['SAMURAI','Black Dog','SAMURAI','of'],['SAMURAI','A Like Supreme','SAMURAI','of'],['SAMURAI','The Ballad of Buck Ravers','SAMURAI','of'],['SAMURAI','Archangel','SAMURAI','of']]],
- ['20.77 NC','Un tema por personaje',[['V · Tema principal','The Rebel Path','P.T. Adamczyk','of'],['Kerry Eurodyne','PonPon Shit','Us Cracks feat. Kerry Eurodyne','of'],['Jackie Welles','Heroes','David Bowie','mi'],['Panam Palmer','Riders on the Storm','The Doors','mi'],['Judy Alvarez','Pyramid Song','Radiohead','mi'],['River Ward','I Fought the Law','The Clash','mi'],['Goro Takemura','Down on the Street','The Stooges','mi'],['Delamain','Epistrophy','Thelonious Monk','mi'],['Songbird','Somewhat Damaged','Nine Inch Nails','mi'],['Solomon Reed','Lucretia My Reflection','The Sisters of Mercy','mi']]]
-];
+ ['20.77 NC FM','Mix de la casa',['irw','pl','nfaV','chip','lyd','rebel','fire','nfa','cure','wat','wrt','rad','rico','rusty','dog','arch','high','buck','pon']],
+ ['89.7 EDGE FM','Edgerunners · T1',['fire','lyd','irw','wrt','rad']],
+ ['92.1 EDGE II','Edgerunners 2',['cure','wat','high','rico','rusty']],
+ ['98.7 SAMURAI','La banda de Johnny',['chip','nfa','dog','sup','buck','arch']],
+ ['77.0 PERSONAJES','Un tema por personaje',['rebel','nfaV','chip','pon','irw','lyd','pl','heroes','riders','pyr','law','street','epi','dmg','luc']]];
 let rs=0,rt=0;
 $('#stations').innerHTML=RAD.map(([f,n],i)=>`<button class="st" data-rs="${i}"><b>${f}</b><small>${n}</small></button>`).join('')+
- `<div class="mono" style="font-size:12px;color:var(--dim);padding:14px;line-height:1.8"><span class="bdg b-of">OFICIAL</span> es del personaje o la serie<br><span class="bdg b-mi">MISIÓN</span> su misión se llama así<br><span class="bdg b-op">VIBE</span> elección de la comunidad</div>`;
-function renderRadio(){const [f,,L]=RAD[rs],[w,n,a]=L[rt];
+ `<div class="mono" style="font-size:12px;color:var(--dim);padding:14px;line-height:1.8"><span class="bdg b-of">OFICIAL</span> es del personaje o la serie<br><span class="bdg b-mi">MISIÓN</span> su misión se llama así<br><span class="bdg b-op">VIBE</span> elección de la comunidad<br>▶ = suena aquí · ↗ = abre YouTube</div>`;
+
+/* ---------- background music (official YouTube uploads) ---------- */
+let Q=RAD[0][2].map(k=>T[k]),qi=0,ytp=null,ytOK=false,wantPlay=false,isPlay=false,errs=0;
+const curT=()=>Q[qi];
+function ytLoad(){if(ytp)return;if(window.YT&&YT.Player)return ytMake();window.onYouTubeIframeAPIReady=ytMake;const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.appendChild(s)}
+function ytMake(){if(ytp)return;const f=document.createElement('iframe');
+ f.allow='autoplay; encrypted-media; picture-in-picture';f.referrerPolicy='strict-origin-when-cross-origin';f.title='Reproductor de música';
+ f.src=`https://www.youtube.com/embed/${curT()[4]}?enablejsapi=1&playsinline=1&rel=0&controls=0&origin=${encodeURIComponent(location.origin)}`;
+ $('#ytHole').replaceWith(f);
+ ytp=new YT.Player(f,{events:{
+  onReady:()=>{ytOK=true;ytp.setVolume(+$('#rwVol').value);if(wantPlay)ytp.loadVideoById(curT()[4])},
+  onStateChange:e=>{isPlay=e.data===1;if(isPlay)errs=0;if(e.data===0)step(1);musicUI()},
+  onError:()=>{if(++errs<Q.length)step(1)}}});}
+function playQ(list,i){Q=list;qi=i;wantPlay=true;$('#radio').classList.remove('off');if(ytOK)ytp.loadVideoById(curT()[4]);else ytLoad();musicUI()}
+function step(d){qi=(qi+d+Q.length)%Q.length;wantPlay=true;if(ytOK)ytp.loadVideoById(curT()[4]);musicUI()}
+function toggleMusic(){if(!ytOK){wantPlay=!wantPlay;ytLoad();musicUI();return}isPlay?ytp.pauseVideo():ytp.playVideo()}
+function musicUI(){const [w,n,a]=curT();$('#rwSt').textContent='▶ '+w;$('#rwT').textContent=n;$('#rwA').textContent=a;
+ $('#rwPlay').textContent=isPlay?'❚❚':'▶';$('#radio').classList.toggle('playing',isPlay);$('#disc').classList.toggle('play',isPlay);renderRadio()}
+$('#rwPlay').onclick=toggleMusic;$('#rwNext').onclick=()=>step(1);$('#rwPrev').onclick=()=>step(-1);
+$('#rwMin').onclick=()=>$('#radio').classList.toggle('min');
+$('#rwVol').oninput=e=>{if(ytOK)ytp.setVolume(+e.target.value)};
+
+function renderRadio(){const [f,,keys]=RAD[rs],L=keys.map(k=>T[k]),[w,n,a,,id]=L[rt]||L[0],live=isPlay?curT()[4]:null;
  $$('.st').forEach((b,i)=>b.classList.toggle('on',i===rs));
- $('#tracks').innerHTML=L.map(([w,n,a,b],i)=>`<button class="tr ${i===rt?'on':''}" data-rt="${i}"><span class="ix">${String(i+1).padStart(2,'0')}</span><span><b>${n}</b><small>${a} · ${w}</small></span><span class="bdg ${B[b][0]}">${B[b][1]}</span></button>`).join('');
- $('#nWho').textContent=f+' · '+w;$('#nName').textContent=n;$('#nArt').textContent=a;$('#nLink').href=yt(n+' '+a);
- $('#disc').classList.add('play');}
+ $('#tracks').innerHTML=L.map(([w,n,a,b,id],i)=>`<button class="tr ${i===rt?'on':''}" data-rt="${i}"><span class="ix">${id&&id===live?'<span style="color:var(--r)">♪</span>':String(i+1).padStart(2,'0')}</span><span><b>${id?'▶ ':'↗ '}${n}</b><small>${a} · ${w}</small></span><span class="bdg ${B[b][0]}">${B[b][1]}</span></button>`).join('');
+ $('#nWho').textContent=f+' · '+w;$('#nName').textContent=n;$('#nArt').textContent=a;
+ const d=$('#disc i');d.style.backgroundImage=id?`url(https://i.ytimg.com/vi/${id}/mqdefault.jpg)`:'';d.textContent=id?'':'NC FM';
+ const l=$('#nLink');l.dataset.play=id?'1':'';l.href=yt(n+' '+a);l.textContent=id?(id===live?'❚❚ PAUSAR':'▶ REPRODUCIR AQUÍ'):'↗ ESCUCHAR EN YOUTUBE';}
+function playSel(){const L=RAD[rs][2].map(k=>T[k]),t=L[rt];if(!t[4])return false;const P=L.filter(x=>x[4]);playQ(P,P.indexOf(t));return true}
 $('#stations').addEventListener('click',e=>{const b=e.target.closest('.st');if(b){rs=+b.dataset.rs;rt=0;blip(300,.12);renderRadio()}});
-$('#tracks').addEventListener('click',e=>{const b=e.target.closest('.tr');if(b){rt=+b.dataset.rt;blip(1200);renderRadio()}});
-renderRadio();
+$('#tracks').addEventListener('click',e=>{const b=e.target.closest('.tr');if(!b)return;rt=+b.dataset.rt;blip(1200);if(!playSel())window.open($('#nLink').href,'_blank','noopener');renderRadio()});
+$('#nLink').addEventListener('click',e=>{if(!e.currentTarget.dataset.play)return;e.preventDefault();
+ const id=RAD[rs][2].map(k=>T[k])[rt][4];if(isPlay&&curT()[4]===id)toggleMusic();else playSel()});
+renderRadio();ytLoad();
 (()=>{const c=$('#viz'),x=c.getContext('2d');let t=0;
  (function f(){requestAnimationFrame(f);if(cur!=='musica')return;c.width=c.offsetWidth;c.height=90;t+=.05;const n=64,w=c.width/n;
   for(let i=0;i<n;i++){const h=(Math.sin(i*.35+t*2)*.5+.5)*(Math.sin(i*.11-t)*.5+.5)*80+4*Math.random();
@@ -884,6 +1119,7 @@ function loadBD(play){const [t,y,src,th]=BD[bi],v=$('#video');v.poster=th.replac
  if(play)v.play().catch(()=>{});}
 $('#plist').addEventListener('click',e=>{const b=e.target.closest('.pv');if(b){bi=+b.dataset.bi;loadBD(true)}});
 loadBD(false);
+$('#video').addEventListener('play',()=>{if(isPlay)ytp.pauseVideo()});
 
 route();
 </script>

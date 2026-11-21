@@ -59,7 +59,7 @@ h1,h2,h3{font-family:Orbitron,sans-serif;letter-spacing:.03em;line-height:1.1}
 #hud button:hover{border-color:var(--y);color:var(--y)}
 #back{display:none}
 body:not(.home) #back{display:inline-block}
-@media(max-width:700px){#hud .stat,#hud .crumb{display:none}#hud{padding:10px 14px}#hud .logo{font-size:15px}.pin .lb{font-size:9px;padding:1px 4px}.pin .dot{width:12px;height:12px}}
+@media(max-width:700px){#hud .stat,#hud .crumb,#snd{display:none}#hud{padding:10px 14px;gap:8px;background:linear-gradient(180deg,#000 55%,transparent)}#hud .logo{font-size:13px}#hud button{white-space:nowrap;padding:5px 8px}.pin .lb{font-size:9px;padding:1px 4px}.pin .dot{width:12px;height:12px}}
 
 /* side rail inside screens */
 #rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:2px;padding:6px}
@@ -321,7 +321,7 @@ body.home #rail{display:none}
 /* ===== MUSIC (player lives in Radioport, HUD only shows a small "now playing" chip) ===== */
 #np{display:none;max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-color:var(--r)!important;color:var(--y)!important}
 #np.show{display:inline-block}
-@media(max-width:700px){#np{max-width:110px}}
+@media(max-width:700px){#np{max-width:120px}}
 .rp-vid{position:relative;aspect-ratio:16/9;background:#000;border:1px solid var(--line);box-shadow:0 0 40px rgba(255,0,60,.25)}
 .rp-vid iframe,.rp-vid>div{position:absolute;inset:0;width:100%;height:100%;border:0}
 .rp-ctl{display:flex;gap:6px;align-items:center;margin-top:10px}

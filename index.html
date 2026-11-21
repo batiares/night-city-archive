@@ -271,8 +271,8 @@ body.home #rail{display:none}
 .slot.sel{outline:2px solid var(--y);outline-offset:2px;box-shadow:0 0 18px rgba(252,238,10,.5)}
 .rd-body{position:relative;height:min(64vh,620px);min-height:440px}
 .rd-body svg{width:100%;height:100%;display:block}
-.rd-body .scan{position:absolute;left:0;right:0;height:60px;top:0;background:linear-gradient(transparent,rgba(94,246,255,.18),transparent);animation:scan 4s linear infinite;pointer-events:none}
-@keyframes scan{to{top:calc(100% - 60px)}}
+.rd-body .scan{position:absolute;left:15%;right:15%;height:2px;top:0;background:var(--cc);box-shadow:0 0 12px var(--cc),0 -18px 24px rgba(94,246,255,.12);opacity:.7;animation:scan 4s linear infinite;pointer-events:none}
+@keyframes scan{to{top:100%}}
 .node{fill:#0b0306;stroke:var(--rr);stroke-width:2;transition:.2s}
 .node.on{fill:var(--y);stroke:var(--y);filter:drop-shadow(0 0 6px var(--y))}
 .rd-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:20px}

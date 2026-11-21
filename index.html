@@ -22,6 +22,7 @@ body{background:var(--bg);color:var(--txt);font-family:Rajdhani,sans-serif;font-
 a,button,[data-go],.pin,.thumb{cursor:pointer}
 button{font:inherit;color:inherit;background:none;border:none}
 img{display:block;max-width:100%}
+.cov{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .mono{font-family:'Share Tech Mono',monospace}
 h1,h2,h3{font-family:Orbitron,sans-serif;letter-spacing:.03em;line-height:1.1}
 ::selection{background:var(--y);color:#000}
@@ -170,7 +171,7 @@ body.home #rail{display:none}
 .mapview .layer{position:absolute;left:50%;top:50%;height:100%;aspect-ratio:1;transform:translate(-50%,-50%)}
 .mapview::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background-image:linear-gradient(rgba(0,240,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.07) 1px,transparent 1px);background-size:40px 40px}
 .mapview::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.8))}
-.pin{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:3}
+.pin{position:absolute;transform:translate(-50%,-50%) scale(var(--iz,1));transition:transform 1s;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:3}
 .pin .dot{width:16px;height:16px;border:2px solid var(--k);transform:rotate(45deg);background:rgba(0,0,0,.6);box-shadow:0 0 14px var(--k);position:relative}
 .pin .dot::after{content:"";position:absolute;inset:-8px;border:1px solid var(--k);animation:ping 1.8s infinite}
 @keyframes ping{to{inset:-22px;opacity:0}}
@@ -617,7 +618,7 @@ const JF=JR.flatMap(([g,l])=>l.map(x=>[g,...x]));
 let ji=0;
 $('#jlist').innerHTML=JR.map(([g,l])=>`<div class="jgroup">${g}</div>`+l.map(([y,t])=>`<button class="jitem" data-ji="${JF.findIndex(f=>f[1]===y&&f[2]===t)}"><b>${y}</b>${t}</button>`).join('')).join('');
 function renderJ(){const [g,y,t,d,img]=JF[ji];
- $('#jdetail').innerHTML=`<div class="hero swap" style="background-image:url(${img})"></div><div class="body swap"><span class="tag">${g} · ${y}</span><h3>${t}</h3><p>${d}</p></div>`;
+ $('#jdetail').innerHTML=`<div class="hero swap"><img class="cov" src="${img}" alt=""></div><div class="body swap"><span class="tag">${g} · ${y}</span><h3>${t}</h3><p>${d}</p></div>`;
  $$('.jitem').forEach(b=>b.classList.toggle('on',+b.dataset.ji===ji));}
 $('#jlist').addEventListener('click',e=>{const b=e.target.closest('.jitem');if(b){ji=+b.dataset.ji;blip(900);renderJ()}});
 renderJ();
@@ -680,7 +681,7 @@ const TABS=[['mis','Misiones'],['lore','Lore'],['egg','Easter eggs'],['loot','C�
 function renderD(){const d=D[dk];
  $$('.pin').forEach(p=>p.classList.toggle('on',p.dataset.d===dk));
  $('#dinfo').style.setProperty('--k',d.k);
- $('#dinfo').innerHTML=`<div class="pic swap" style="background-image:url(${d.img})"></div><div class="in"><h3 style="color:${d.k}">${d.n}</h3><div class="meta">${d.meta}</div>
+ $('#dinfo').innerHTML=`<div class="pic swap"><img class="cov" src="${d.img}" alt=""></div><div class="in"><h3 style="color:${d.k}">${d.n}</h3><div class="meta">${d.meta}</div>
   <div class="fx2"><span class="tag" style="background:${d.k}">FIXER: ${d.fixer}</span></div><p class="desc">${d.desc}</p>
   <div class="tabs">${TABS.map(([k,l])=>`<button data-t="${k}" class="${k===dt?'on':''}">${l}</button>`).join('')}</div>
   <ul class="swap">${d[dt].map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
@@ -688,8 +689,8 @@ function renderD(){const d=D[dk];
 function zoomTo(k){const v=$('#mapview'),s=$('#stage'),layer=$('#pins'),d=D[k];
  const vr=v.getBoundingClientRect(),lr=layer.getBoundingClientRect(),sr=s.getBoundingClientRect();
  const px=lr.left-sr.left+lr.width*d.x/100,py=lr.top-sr.top+lr.height*d.y/100,z=2.2;
- s.style.transform=`translate(${vr.width/2-px*z}px,${vr.height/2-py*z}px) scale(${z})`;$('#mapcoord').textContent=`ZOOM ${z}x · ${d.x}N ${d.y}W`;zoomed=true}
-$('#zoomOut').onclick=()=>{$('#stage').style.transform='';$('#mapcoord').textContent='ZOOM 1.0x';zoomed=false};
+ s.style.transform=`translate(${vr.width/2-px*z}px,${vr.height/2-py*z}px) scale(${z})`;s.style.setProperty('--iz',1/z);$('#mapcoord').textContent=`ZOOM ${z}x · ${d.x}N ${d.y}W`;zoomed=true}
+$('#zoomOut').onclick=()=>{$('#stage').style.transform='';$('#stage').style.setProperty('--iz',1);$('#mapcoord').textContent='ZOOM 1.0x';zoomed=false};
 $('#pins').addEventListener('click',e=>{const p=e.target.closest('.pin');if(!p)return;dk=p.dataset.d;blip(600);
   // compute from un-zoomed geometry
   $('#stage').style.transition='none';$('#stage').style.transform='';$('#stage').offsetWidth;$('#stage').style.transition='';zoomTo(dk);renderD()});
@@ -809,7 +810,7 @@ const SH=[
  ['egg','Easter egg','Guiños en Phantom Liberty','Varios perks del 2.0 hacen referencia directa a Edgerunners.','Árbol de habilidades',null]];
 const SC={loot:'var(--y)',egg:'var(--m)',story:'var(--c)'};
 $('#filters').innerHTML=[['all','Todo'],['loot','Cómo conseguir'],['egg','Easter eggs'],['story','Historia']].map(([k,l],i)=>`<button data-f="${k}" class="${i?'':'on'}">${l}</button>`).join('');
-$('#shards').innerHTML=SH.map(([c,t,h,p,w,img])=>`<div class="sh panel" data-c="${c}">${img?`<div class="im" style="background-image:url(${W(img,500)})"></div>`:''}<div class="tx"><div class="t" style="color:${SC[c]}">${t}</div><h3>${h}</h3><p>${p}</p><div class="w">${w}</div></div></div>`).join('');
+$('#shards').innerHTML=SH.map(([c,t,h,p,w,img])=>`<div class="sh panel" data-c="${c}">${img?`<div class="im"><img class="cov" style="object-fit:contain" loading="lazy" src="${W(img,500)}" alt=""></div>`:''}<div class="tx"><div class="t" style="color:${SC[c]}">${t}</div><h3>${h}</h3><p>${p}</p><div class="w">${w}</div></div></div>`).join('');
 $('#filters').addEventListener('click',e=>{const f=e.target.dataset.f;if(!f)return;blip(900);
  $$('#filters button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));$$('.sh').forEach(s=>s.classList.toggle('hide',f!=='all'&&s.dataset.c!==f))});
 
@@ -826,7 +827,7 @@ const ER={
 };
 function renderER(s){const e=ER[s];document.documentElement.style.setProperty('--acc',e.acc);
  const crew=P.Edgerunners.filter(c=>e.crew.includes(c[0]));
- $('#er').innerHTML=`<div class="poster swap" style="background-image:url(${e.img})"><div class="pt"><div class="meta">${e.meta}</div><h3>${e.t}</h3></div></div>
+ $('#er').innerHTML=`<div class="poster swap"><img class="cov" src="${e.img}" alt=""><div class="pt"><div class="meta">${e.meta}</div><h3>${e.t}</h3></div></div>
  <div class="info panel swap">${e.p.map(x=>`<p>${x}</p>`).join('')}<ul class="facts">${e.f.map(x=>`<li>${x}</li>`).join('')}</ul>
  ${crew.length?`<div class="subh">La crew de Maine</div><div class="crew">${crew.map(([n,,,img])=>`<div data-go="personajes"><img loading="lazy" src="${W(img,200)}" alt="${n}">${n.split(' ')[0]}</div>`).join('')}</div>`:''}</div>`;
  $$('#ersw button').forEach(b=>b.classList.toggle('on',b.dataset.s==s));}

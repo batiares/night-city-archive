@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Night City Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --y:#fcee0a; --c:#00f0ff; --r:#ff003c; --m:#ff2bd6; --g:#3dff9a;
+  --bg:#07070c; --bg2:#0e0e17; --panel:#11111c; --line:#2a2a3d; --txt:#e8e8f0; --dim:#8b8ba3;
+  --cut:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px));
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:Rajdhani,sans-serif;font-size:18px;line-height:1.55;overflow-x:hidden}
+::selection{background:var(--y);color:#000}
+a{color:var(--c)}
+.mono{font-family:'Share Tech Mono',monospace}
+h1,h2,h3,.orb{font-family:Orbitron,sans-serif;letter-spacing:.04em}
+
+/* scanlines + noise overlay */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+
+/* boot */
+#boot{position:fixed;inset:0;background:#000;z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .6s}
+#boot pre{color:var(--g);font-family:'Share Tech Mono',monospace;font-size:15px;white-space:pre-wrap;max-width:640px;padding:16px}
+#boot.off{opacity:0;pointer-events:none}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:24px;padding:12px 24px;
+  background:linear-gradient(180deg,rgba(7,7,12,.95),rgba(7,7,12,.6));backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav .logo{font-family:Orbitron;font-weight:900;color:var(--y);font-size:20px;text-decoration:none;text-shadow:2px 0 var(--r),-2px 0 var(--c)}
+nav ul{display:flex;gap:18px;list-style:none;margin-left:auto;flex-wrap:wrap}
+nav ul a{color:var(--txt);text-decoration:none;font-family:'Share Tech Mono';font-size:14px;text-transform:uppercase;position:relative}
+nav ul a::before{content:attr(data-n);color:var(--r);margin-right:4px}
+nav ul a:hover{color:var(--y)}
+@media(max-width:860px){nav ul{display:none}}
+
+/* hero */
+#hero{position:relative;height:100vh;min-height:620px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+#rain{position:absolute;inset:0;z-index:1}
+#skyline{position:absolute;bottom:0;left:0;width:100%;height:60%;z-index:2}
+#hero::before{content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 50% 85%,rgba(255,0,60,.35),transparent 60%),radial-gradient(ellipse at 20% 20%,rgba(0,240,255,.15),transparent 50%),linear-gradient(#05050a,#140716 70%,#2a0614)}
+.hero-in{position:relative;z-index:3;padding:16px}
+.tag{display:inline-block;font-family:'Share Tech Mono';font-size:14px;color:#000;background:var(--y);padding:4px 12px;clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+.glitch{position:relative;font-family:Orbitron;font-weight:900;font-size:clamp(48px,12vw,150px);line-height:.95;color:var(--y);margin:18px 0;text-transform:uppercase}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;inset:0}
+.glitch::before{color:var(--c);animation:g1 2.6s infinite steps(1);clip-path:inset(0 0 60% 0)}
+.glitch::after{color:var(--r);animation:g2 3.1s infinite steps(1);clip-path:inset(55% 0 0 0)}
+@keyframes g1{0%,92%,100%{transform:none}93%{transform:translate(-6px,-2px)}95%{transform:translate(5px,1px)}97%{transform:translate(-3px,2px)}}
+@keyframes g2{0%,88%,100%{transform:none}89%{transform:translate(6px,2px)}91%{transform:translate(-5px,-1px)}94%{transform:translate(4px,0)}}
+.hero-in p{max-width:640px;margin:0 auto;color:#cfcfe0;font-size:20px}
+.btn{display:inline-block;margin-top:28px;padding:14px 34px;background:var(--r);color:#fff;font-family:Orbitron;font-weight:700;text-decoration:none;clip-path:var(--cut);transition:.2s;border:none;cursor:pointer;font-size:15px}
+.btn:hover{background:var(--y);color:#000;transform:translateY(-2px)}
+.scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:3;font-family:'Share Tech Mono';color:var(--c);font-size:13px;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.2}}
+
+/* sections */
+section{position:relative;padding:110px 24px 90px}
+.wrap{max-width:1200px;margin:0 auto}
+.sh{display:flex;align-items:flex-end;gap:18px;margin-bottom:44px;flex-wrap:wrap}
+.sh .num{font-family:Orbitron;font-weight:900;font-size:76px;line-height:.8;color:transparent;-webkit-text-stroke:1.5px var(--r)}
+.sh h2{font-size:clamp(28px,5vw,48px);text-transform:uppercase;color:var(--y)}
+.sh .sub{width:100%;color:var(--dim);font-family:'Share Tech Mono';font-size:15px}
+.sh .sub::before{content:"// "}
+.stripe{height:14px;background:repeating-linear-gradient(-45deg,var(--y) 0 14px,#000 14px 28px);opacity:.9}
+.alt{background:var(--bg2)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.reveal.on{opacity:1;transform:none}
+
+/* origin timeline */
+.tl{position:relative;padding-left:34px}
+.tl::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(var(--c),var(--m),var(--r))}
+.ev{position:relative;margin-bottom:26px;padding:20px 22px;background:var(--panel);border:1px solid var(--line);clip-path:var(--cut);transition:.25s}
+.ev:hover{border-color:var(--c);transform:translateX(6px);box-shadow:0 0 30px rgba(0,240,255,.12)}
+.ev::before{content:"";position:absolute;left:-30px;top:24px;width:12px;height:12px;background:var(--y);transform:rotate(45deg);box-shadow:0 0 12px var(--y)}
+.ev .yr{font-family:Orbitron;font-weight:900;color:var(--c);font-size:22px}
+.ev h3{font-size:18px;margin:4px 0 6px;color:#fff}
+.ev p{color:#c4c4d6}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:40px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.quote{position:sticky;top:110px;padding:34px;border-left:4px solid var(--y);background:linear-gradient(90deg,rgba(252,238,10,.08),transparent)}
+.quote big{display:block;font-family:Orbitron;font-weight:900;font-size:clamp(34px,5vw,58px);line-height:1;color:#fff}
+.quote big span{color:var(--r)}
+.quote p{margin-top:18px;color:#c4c4d6}
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.pillars div{border:1px solid var(--line);padding:12px;font-size:16px}
+.pillars b{display:block;color:var(--y);font-family:'Share Tech Mono';font-weight:400}
+
+/* game history: horizontal track */
+.track{display:flex;gap:18px;overflow-x:auto;padding:10px 4px 26px;scroll-snap-type:x mandatory}
+.track::-webkit-scrollbar{height:8px}.track::-webkit-scrollbar-thumb{background:var(--r)}
+.chip{flex:0 0 290px;scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);padding:22px;position:relative;clip-path:var(--cut);transition:.25s}
+.chip:hover{border-color:var(--y);transform:translateY(-6px)}
+.chip .yr{font-family:Orbitron;font-size:34px;font-weight:900;color:var(--y)}
+.chip .k{font-family:'Share Tech Mono';font-size:12px;color:#000;background:var(--c);padding:2px 8px;display:inline-block;margin:6px 0}
+.chip.red .k{background:var(--r);color:#fff}
+.chip p{font-size:16px;color:#c4c4d6}
+.lore{margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--line)}
+.lore div{background:var(--bg2);padding:20px}
+.lore .yr{font-family:Orbitron;color:var(--r);font-weight:900;font-size:26px}
+@media(max-width:800px){.lore{grid-template-columns:1fr 1fr}}
+
+/* map */
+.mapwrap{display:grid;grid-template-columns:1.25fr 1fr;gap:26px}
+@media(max-width:960px){.mapwrap{grid-template-columns:1fr}}
+.mapbox{position:relative;background:#03060a;border:1px solid var(--line);clip-path:var(--cut);overflow:hidden}
+.mapbox::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(0,240,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.06) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.mapbox svg{display:block;width:100%;height:auto;position:relative}
+.d{cursor:pointer;transition:.2s;stroke-width:2;fill-opacity:.18}
+.d:hover,.d.sel{fill-opacity:.55;filter:drop-shadow(0 0 10px currentColor)}
+.dl{font-family:Orbitron;font-size:13px;font-weight:700;fill:#fff;pointer-events:none;text-anchor:middle;paint-order:stroke;stroke:#000;stroke-width:4px}
+.pin{animation:pulse 1.8s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{50%{opacity:.35;transform:scale(1.5)}}
+.radar{transform-origin:400px 300px;animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mapbar{position:absolute;left:12px;top:10px;font-family:'Share Tech Mono';font-size:12px;color:var(--c)}
+.info{background:var(--panel);border:1px solid var(--line);padding:24px;clip-path:var(--cut);min-height:520px}
+.info h3{font-size:28px;color:var(--y);text-transform:uppercase}
+.info .meta{font-family:'Share Tech Mono';font-size:13px;color:var(--dim);margin:4px 0 14px}
+.info .desc{color:#d0d0e0;margin-bottom:16px}
+.tabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{background:transparent;border:1px solid var(--line);color:var(--dim);font-family:'Share Tech Mono';font-size:13px;padding:7px 12px;cursor:pointer;text-transform:uppercase}
+.tabs button.on{background:var(--r);border-color:var(--r);color:#fff}
+.info ul{list-style:none}
+.info li{padding:10px 12px;border-left:3px solid var(--c);background:rgba(255,255,255,.025);margin-bottom:8px;font-size:16px}
+.info li b{color:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;font-family:'Share Tech Mono';font-size:13px;color:var(--dim)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:middle}
+
+/* eggs */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
+.filters button{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:9px 16px;font-family:'Share Tech Mono';cursor:pointer;font-size:14px;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
+.filters button.on{background:var(--y);color:#000;border-color:var(--y)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);padding:22px;clip-path:var(--cut);transition:.25s;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(252,238,10,.08) 50%,transparent 60%);transform:translateX(-100%);transition:.6s}
+.card:hover::after{transform:translateX(100%)}
+.card:hover{border-color:var(--m);transform:translateY(-4px)}
+.card .t{font-family:'Share Tech Mono';font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.card h3{font-size:18px;margin:8px 0;color:#fff}
+.card p{font-size:16px;color:#c4c4d6}
+.card .where{margin-top:10px;font-family:'Share Tech Mono';font-size:13px;color:var(--y)}
+.card .where::before{content:"⌖ "}
+.card.hide{display:none}
+
+/* edgerunners */
+.er{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+@media(max-width:900px){.er{grid-template-columns:1fr}}
+.season{position:relative;padding:30px;border:1px solid var(--line);clip-path:var(--cut);overflow:hidden}
+.season.s1{background:linear-gradient(150deg,rgba(255,43,214,.16),rgba(0,240,255,.05) 60%),var(--panel)}
+.season.s2{background:linear-gradient(150deg,rgba(252,238,10,.13),rgba(255,0,60,.08) 60%),var(--panel)}
+.season .big{position:absolute;right:-10px;top:-30px;font-family:Orbitron;font-weight:900;font-size:180px;color:rgba(255,255,255,.04);line-height:1}
+.season h3{font-size:30px;color:#fff;text-transform:uppercase}
+.season .meta{font-family:'Share Tech Mono';color:var(--c);font-size:14px;margin-bottom:14px}
+.cast{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.cast span{font-family:'Share Tech Mono';font-size:13px;padding:5px 10px;border:1px solid var(--m);color:var(--m)}
+.s2 .cast span{border-color:var(--y);color:var(--y)}
+.season p{color:#d0d0e0;margin-bottom:10px}
+.facts{margin-top:14px;font-size:16px}
+.facts li{list-style:none;padding:6px 0;border-bottom:1px dashed var(--line)}
+.facts li::before{content:"▸ ";color:var(--r)}
+
+/* music */
+.sub-h{font-family:Orbitron;color:var(--c);font-size:16px;text-transform:uppercase;margin:34px 0 14px;letter-spacing:.12em}
+.tracks{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+.trk{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);padding:14px;transition:.2s;text-decoration:none;color:inherit;position:relative}
+.trk:hover{border-color:var(--y);background:#16162a}
+.trk .cov{flex:0 0 58px;height:58px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:8px;background:#000;border:1px solid var(--line)}
+.trk .cov i{width:5px;background:var(--y);height:20%;animation:eq 1s infinite ease-in-out alternate}
+.trk:not(:hover) .cov i{animation-play-state:paused}
+.trk .cov i:nth-child(2){animation-delay:-.3s;background:var(--c)}.trk .cov i:nth-child(3){animation-delay:-.6s;background:var(--r)}.trk .cov i:nth-child(4){animation-delay:-.15s;background:var(--m)}
+@keyframes eq{0%{height:15%}100%{height:100%}}
+.trk .who{font-family:'Share Tech Mono';font-size:12px;color:var(--r);text-transform:uppercase}
+.trk .name{font-family:Orbitron;font-size:15px;color:#fff;line-height:1.3}
+.trk .art{font-size:15px;color:var(--dim)}
+.trk .badge{position:absolute;top:8px;right:10px;font-family:'Share Tech Mono';font-size:11px;padding:1px 6px;border:1px solid currentColor}
+.b-of{color:var(--g)}.b-mi{color:var(--c)}.b-op{color:var(--y)}
+.note{font-size:15px;color:var(--dim);margin-top:12px}
+
+/* dossiers */
+.dossiers{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.dos{perspective:1000px;height:300px}
+.dos .in{position:relative;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.dos:hover .in,.dos:focus-within .in{transform:rotateY(180deg)}
+.dos .f,.dos .b{position:absolute;inset:0;backface-visibility:hidden;clip-path:var(--cut);border:1px solid var(--line);padding:20px;display:flex;flex-direction:column}
+.dos .f{background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--k) 35%,transparent),transparent 60%),var(--panel);justify-content:flex-end}
+.dos .av{position:absolute;top:26px;left:50%;transform:translateX(-50%);width:110px;height:110px;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-weight:900;font-size:44px;color:#000;background:var(--k);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);box-shadow:0 0 30px var(--k)}
+.dos .f h3{color:#fff;font-size:19px}
+.dos .f .r{font-family:'Share Tech Mono';font-size:13px;color:var(--k)}
+.dos .b{background:#0b0b14;transform:rotateY(180deg);font-size:15px;color:#d0d0e0;gap:8px;overflow:auto}
+.dos .b b{color:var(--k);font-family:'Share Tech Mono';font-weight:400;font-size:12px;display:block}
+
+/* factions */
+.gangs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.gang{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--k);padding:18px;transition:.2s}
+.gang:hover{box-shadow:0 0 25px color-mix(in srgb,var(--k) 40%,transparent);transform:translateY(-3px)}
+.gang h3{color:var(--k);font-size:18px;text-transform:uppercase}
+.gang .z{font-family:'Share Tech Mono';font-size:12px;color:var(--dim);margin:2px 0 8px}
+.gang p{font-size:15px;color:#c4c4d6}
+.corps{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:2px;background:var(--line)}
+.corp{background:var(--bg);padding:18px;transition:.2s}
+.corp:hover{background:#1a0a10}
+.corp h3{font-size:17px;color:#fff}.corp h3 span{color:var(--r)}
+.corp p{font-size:14px;color:var(--dim)}
+
+/* cyberware */
+.cw{display:grid;grid-template-columns:260px 1fr;gap:30px;align-items:start}
+@media(max-width:800px){.cw{grid-template-columns:1fr}.cw .body{max-width:200px;margin:0 auto}}
+.body{position:sticky;top:100px}
+.body svg{display:block;width:100%;height:auto}
+#bodySvg g[fill=none]{stroke:#4a4a6a}
+.hp{cursor:pointer}.hp circle{transition:.2s}
+.hp:hover circle,.hp.on circle{r:9;filter:drop-shadow(0 0 8px var(--y))}
+.cwlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cwi{background:var(--panel);border:1px solid var(--line);padding:16px;transition:.2s}
+.cwi.on{border-color:var(--y);box-shadow:0 0 20px rgba(252,238,10,.15)}
+.cwi .s{font-family:'Share Tech Mono';font-size:12px;color:var(--c)}
+.cwi h3{font-size:17px;color:#fff;margin:2px 0 6px}
+.cwi p{font-size:15px;color:#c4c4d6}
+.cwi .bd{margin-top:8px;font-family:'Share Tech Mono';font-size:12px;color:var(--y)}
+
+/* trailers */
+.tv{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.vid{position:relative;aspect-ratio:16/9;display:flex;align-items:flex-end;padding:16px;text-decoration:none;color:#fff;border:1px solid var(--line);overflow:hidden;background:linear-gradient(135deg,var(--k),#000 75%)}
+.vid::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.25) 0 2px,transparent 2px 4px)}
+.vid .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;transition:.2s;clip-path:polygon(0 0,100% 0,100% 70%,70% 100%,0 100%)}
+.vid:hover .play{background:var(--y);color:#000;border-color:var(--y);transform:translate(-50%,-50%) scale(1.1)}
+.vid .tt{position:relative}.vid .tt small{display:block;font-family:'Share Tech Mono';color:var(--y);font-size:12px}
+.vid .tt b{font-family:Orbitron;font-size:16px}
+.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+footer{padding:50px 24px;text-align:center;border-top:1px solid var(--line);color:var(--dim);font-family:'Share Tech Mono';font-size:13px}
+footer b{color:var(--y)}
+</style>
+</head>
+<body>
+
+<div id="boot"><pre id="bootTxt"></pre></div>
+
+<nav>
+  <a class="logo" href="#hero">NC//ARCHIVE</a>
+  <ul>
+    <li><a data-n="01" href="#origen">Origen</a></li>
+    <li><a data-n="02" href="#historia">Del papel al juego</a></li>
+    <li><a data-n="03" href="#mapa">Night City</a></li>
+    <li><a data-n="04" href="#personajes">Personajes</a></li>
+    <li><a data-n="05" href="#facciones">Facciones</a></li>
+    <li><a data-n="06" href="#cromo">Cyberware</a></li>
+    <li><a data-n="07" href="#secretos">Secretos</a></li>
+    <li><a data-n="08" href="#edgerunners">Edgerunners</a></li>
+    <li><a data-n="09" href="#musica">Soundtrack</a></li>
+    <li><a data-n="10" href="#trailers">Trailers</a></li>
+  </ul>
+</nav>
+
+<header id="hero">
+  <canvas id="rain"></canvas>
+  <svg id="skyline" preserveAspectRatio="none"></svg>
+  <div class="hero-in">
+    <span class="tag mono">ARCHIVO NO OFICIAL // FAN SITE // 2077</span>
+    <h1 class="glitch" data-t="Night City">Night City</h1>
+    <p>Del cyberpunk de los 80 a Cyberpunk 2077, Phantom Liberty y las dos temporadas de Edgerunners. Mapa, misiones, secretos y música.</p>
+    <a class="btn" href="#origen">ENTRAR A LA RED</a>
+  </div>
+  <div class="scroll-hint">▼ SCROLL PARA JACKEAR ▼</div>
+</header>
+
+<div class="stripe"></div>
+
+<!-- 01 ORIGEN -->
+<section id="origen">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">01</span><h2>Cómo nació el cyberpunk</h2><span class="sub">high tech, low life — el género antes del juego</span></div>
+    <div class="grid2">
+      <div class="tl" id="originTL"></div>
+      <div class="reveal">
+        <div class="quote">
+          <big>HIGH TECH.<br><span>LOW LIFE.</span></big>
+          <p>El cyberpunk imagina un futuro donde la tecnología avanzó muchísimo pero la sociedad no: megacorporaciones más poderosas que los gobiernos, cuerpos modificados con implantes, hackers que navegan redes y calles donde sobrevivir cuesta todo.</p>
+          <div class="pillars">
+            <div><b>CORPOS</b>Empresas que mandan sobre ciudades y ejércitos.</div>
+            <div><b>CROMO</b>Implantes que cambian el cuerpo… y la mente.</div>
+            <div><b>LA RED</b>El ciberespacio como territorio a conquistar.</div>
+            <div><b>LA CALLE</b>Mercenarios, pandillas y antihéroes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 HISTORIA -->
+<section id="historia" class="alt">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">02</span><h2>Del papel al juego</h2><span class="sub">mike pondsmith → cd projekt red → netflix. desliza →</span></div>
+    <div class="track reveal" id="gameTL"></div>
+    <h3 class="sub-h reveal">Cronología dentro del universo</h3>
+    <div class="lore reveal">
+      <div><div class="yr">2013</div>El juego de rol original: el mundo de “Cyberpunk” de Pondsmith.</div>
+      <div><div class="yr">2023</div>Cuarta Guerra Corporativa. Johnny Silverhand detona una bomba en la Torre Arasaka.</div>
+      <div><div class="yr">2045</div>Era RED: Night City se reconstruye tras la guerra.</div>
+      <div><div class="yr">2077</div>V, el atraco al Relic y la cuenta regresiva en tu cabeza.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 MAPA -->
+<section id="mapa">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">03</span><h2>Mapa de Night City</h2><span class="sub">toca un distrito para ver misiones, lore, easter eggs y loot</span></div>
+    <div class="mapwrap reveal">
+      <div class="mapbox">
+        <div class="mapbar">NCPD // CITY GRID // SAT-LINK ONLINE</div>
+        <svg viewBox="0 0 800 640" id="map">
+          <defs>
+            <linearGradient id="sea" x1="0" x2="1"><stop offset="0" stop-color="#001a2a"/><stop offset="1" stop-color="#000"/></linearGradient>
+            <radialGradient id="sweep"><stop offset="0" stop-color="#00f0ff" stop-opacity=".25"/><stop offset="1" stop-color="#00f0ff" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect x="0" y="0" width="170" height="640" fill="url(#sea)"/>
+          <text x="40" y="330" class="dl" style="fill:#0a6c86;font-size:12px" transform="rotate(-90 60 330)">OCÉANO PACÍFICO</text>
+          <g id="districts"></g>
+          <path class="radar" d="M400 300 L400 20 A280 280 0 0 1 640 160 Z" fill="url(#sweep)" pointer-events="none"/>
+          <g id="pins"></g>
+        </svg>
+      </div>
+      <div class="info" id="info"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+  </div>
+</section>
+
+<!-- 04 PERSONAJES -->
+<section id="personajes" class="alt">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">04</span><h2>Dossiers</h2><span class="sub">los rostros de night city · pasa el cursor para voltear la ficha</span></div>
+    <div class="dossiers" id="dossiers"></div>
+  </div>
+</section>
+
+<!-- 05 FACCIONES -->
+<section id="facciones">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">05</span><h2>Pandillas y corporaciones</h2><span class="sub">quién manda en cada calle y en cada torre</span></div>
+    <h3 class="sub-h reveal">Pandillas</h3>
+    <div class="gangs reveal" id="gangs"></div>
+    <h3 class="sub-h reveal">Megacorporaciones</h3>
+    <div class="corps reveal" id="corps"></div>
+  </div>
+</section>
+
+<!-- 06 CYBERWARE -->
+<section id="cromo" class="alt">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">06</span><h2>Guía de cromo</h2><span class="sub">cyberware icónico y qué build arma cada uno</span></div>
+    <div class="cw">
+      <div class="body reveal">
+        <svg viewBox="0 0 200 420" id="bodySvg">
+          <g fill="none" stroke="#2a2a3d" stroke-width="2">
+            <circle cx="100" cy="45" r="28"/><path d="M70 85 h60 l20 120 h-20 l-10 -80 v100 l10 170 h-25 l-15 -150 l-15 150 h-25 l10 -170 v-100 l-10 80 h-20 z"/>
+          </g>
+          <g id="hot"></g>
+        </svg>
+      </div>
+      <div class="cwlist reveal" id="cwlist"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 SECRETOS -->
+<section id="secretos">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">07</span><h2>Easter eggs y cómo conseguir cosas</h2><span class="sub">loot icónico, secretos y referencias escondidas</span></div>
+    <div class="filters reveal" id="filters"></div>
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+
+<!-- 08 EDGERUNNERS -->
+<section id="edgerunners" class="alt">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">08</span><h2>Cyberpunk: Edgerunners</h2><span class="sub">studio trigger × cd projekt red // netflix</span></div>
+    <div class="er">
+      <article class="season s1 reveal">
+        <div class="big">T1</div>
+        <h3>Temporada 1</h3>
+        <div class="meta">SEP 2022 · 10 EPISODIOS · DIR. HIROYUKI IMAISHI</div>
+        <p>David Martinez, un chavo de Santo Domingo, pierde todo y termina instalándose un Sandevistan militar. Se une a la crew de Maine, conoce a Lucy y empieza a subir en el mundo de los edgerunners… pagando el precio de cada pieza de cromo.</p>
+        <div class="cast"><span>David Martinez</span><span>Lucy</span><span>Rebecca</span><span>Maine</span><span>Dorio</span><span>Kiwi</span><span>Pilar</span><span>Falco</span><span>Faraday</span><span>Adam Smasher</span></div>
+        <ul class="facts">
+          <li>La ciberpsicosis es el corazón del drama: más cromo, menos humanidad.</li>
+          <li>La Luna es el sueño de Lucy y el hilo emocional de toda la serie.</li>
+          <li>Llevó a millones de jugadores de regreso a 2077 en 2022.</li>
+          <li>El parche 1.6 del juego (“Edgerunners Update”) añadió guiños al anime: ropa y armas de la crew.</li>
+        </ul>
+      </article>
+      <article class="season s2 reveal">
+        <div class="big">T2</div>
+        <h3>Edgerunners 2</h3>
+        <div class="meta">20 OCT 2026 · 10 EPISODIOS · DIR. KAI IKARASHI</div>
+        <p>Historia independiente con elenco nuevo. TRIGGER la resume como un edgerunner acabado y una netrunner letal en Night City… ¿qué podría salir mal?</p>
+        <div class="cast"><span>Elenco nuevo</span><span>Studio TRIGGER</span><span>Guion: Masahiko Otsuka</span><span>Diseño: Ichigo Kanno</span><span>Bartosz Sztybor</span></div>
+        <ul class="facts">
+          <li>Opening: “10:15 Saturday Night” de The Cure.</li>
+          <li>Ending: “Watson” de Petite Meller.</li>
+          <li>Se estrenó completa de golpe en Netflix, igual que la T1.</li>
+          <li>No continúa la historia de David y Lucy.</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 09 MUSICA -->
+<section id="musica">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">09</span><h2>Soundtrack de Night City</h2><span class="sub">pasa el cursor para encender el ecualizador · clic abre la búsqueda en youtube</span></div>
+    <div class="legend reveal" style="margin-bottom:10px">
+      <span><i style="background:var(--g)"></i>OFICIAL: la canción es del personaje o de la serie</span>
+      <span><i style="background:var(--c)"></i>MISIÓN: su misión lleva el nombre de esa canción real</span>
+      <span><i style="background:var(--y)"></i>VIBE: elección de la comunidad</span>
+    </div>
+    <h3 class="sub-h reveal">Edgerunners · Temporada 1</h3>
+    <div class="tracks reveal" id="t-s1"></div>
+    <h3 class="sub-h reveal">Edgerunners · Temporada 2</h3>
+    <div class="tracks reveal" id="t-s2"></div>
+    <h3 class="sub-h reveal">Cyberpunk 2077 · Un tema por personaje</h3>
+    <div class="tracks reveal" id="t-77"></div>
+    <h3 class="sub-h reveal">SAMURAI · La banda de Johnny</h3>
+    <div class="tracks reveal" id="t-sam"></div>
+    <p class="note reveal">Dato: muchísimas misiones de 2077 y Phantom Liberty se llaman como canciones reales (Bowie, The Doors, Radiohead, The Stooges, Nine Inch Nails…). Es uno de los easter eggs más grandes del juego. La voz de SAMURAI en el juego es de la banda sueca Refused.</p>
+  </div>
+</section>
+
+<!-- 10 TRAILERS -->
+<section id="trailers" class="alt">
+  <div class="wrap">
+    <div class="sh reveal"><span class="num">10</span><h2>Archivo de trailers</h2><span class="sub">material oficial · clic para verlo en youtube</span></div>
+    <div class="tv reveal" id="tv"></div>
+    <div class="links reveal">
+      <a class="btn" href="https://www.cyberpunk.net" target="_blank" rel="noopener">CYBERPUNK.NET</a>
+      <a class="btn" href="https://www.netflix.com/search?q=cyberpunk%20edgerunners" target="_blank" rel="noopener">EDGERUNNERS EN NETFLIX</a>
+      <a class="btn" href="https://rtalsoriangames.com" target="_blank" rel="noopener">R. TALSORIAN GAMES</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <b>NC//ARCHIVE</b> — sitio fan no oficial. Cyberpunk, Cyberpunk 2077 y Edgerunners son marcas de CD PROJEKT RED y R. Talsorian Games.<br>
+  “Wake the f*** up, samurai. We have a city to burn.”
+</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const yt=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+
+/* ---------- boot ---------- */
+(()=>{
+  const lines=['> BIOS ARASAKA-OS v20.77 ......... OK','> Cargando relic.sys ............. OK','> Conectando a la Red de Night City ..','> Bypass ICE: ████████████ 100%','> Bienvenido, choom.'];
+  const el=$('#bootTxt');let i=0;
+  const t=setInterval(()=>{el.textContent+=lines[i++]+'\n';if(i===lines.length){clearInterval(t);setTimeout(()=>$('#boot').classList.add('off'),450)}},230);
+})();
+
+/* ---------- rain ---------- */
+(()=>{
+  const c=$('#rain'),x=c.getContext('2d');let w,h,drops;
+  const size=()=>{w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;drops=Array.from({length:Math.min(260,w/4)},()=>({x:Math.random()*w,y:Math.random()*h,l:8+Math.random()*18,v:6+Math.random()*10}))};
+  size();addEventListener('resize',size);
+  (function f(){x.clearRect(0,0,w,h);x.strokeStyle='rgba(0,240,255,.35)';x.lineWidth=1;x.beginPath();
+    for(const d of drops){x.moveTo(d.x,d.y);x.lineTo(d.x-2,d.y+d.l);d.y+=d.v;d.x-=.6;if(d.y>h){d.y=-20;d.x=Math.random()*w}}
+    x.stroke();requestAnimationFrame(f)})();
+})();
+
+/* ---------- skyline ---------- */
+(()=>{
+  const s=$('#skyline'),W=1600,H=500;s.setAttribute('viewBox',`0 0 ${W} ${H}`);let html='',x=0;
+  const neon=['#ff003c','#00f0ff','#fcee0a','#ff2bd6'];
+  for(let layer=0;layer<2;layer++){x=-20;
+    while(x<W){const bw=40+Math.random()*90,bh=(layer?120:220)+Math.random()*(layer?180:260),y=H-bh;
+      html+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" fill="${layer?'#0a0610':'#160a1c'}"/>`;
+      if(layer)for(let wy=y+10;wy<H-10;wy+=14)for(let wx=x+6;wx<x+bw-8;wx+=12)if(Math.random()<.18)html+=`<rect x="${wx}" y="${wy}" width="5" height="6" fill="${Math.random()<.85?'#fcee0a':'#00f0ff'}" opacity="${.3+Math.random()*.6}"/>`;
+      if(layer&&Math.random()<.25)html+=`<rect x="${x+6}" y="${y+20}" width="${bw-12}" height="4" fill="${neon[Math.random()*4|0]}" style="filter:drop-shadow(0 0 6px currentColor)"/>`;
+      x+=bw+2;}
+  }
+  html+=`<rect x="1080" y="40" width="70" height="460" fill="#0a0610" stroke="#ff003c" stroke-width="2"/><text x="1115" y="80" fill="#ff003c" font-family="Orbitron" font-size="14" text-anchor="middle">荒坂</text>`;
+  s.innerHTML=html;
+})();
+
+/* ---------- 01 origin timeline ---------- */
+const origin=[
+ ['1968','¿Sueñan los androides con ovejas eléctricas?','Philip K. Dick plantea la pregunta clave del género: ¿qué nos hace humanos cuando las máquinas pueden imitarnos?'],
+ ['1975','The Shockwave Rider','John Brunner imagina redes de datos, gusanos informáticos y una sociedad hiperconectada. Proto-cyberpunk puro.'],
+ ['1982','Blade Runner + Akira + “Burning Chrome”','Ridley Scott define la estética (lluvia, neón, rascacielos), Katsuhiro Otomo arranca Akira y William Gibson usa por primera vez la palabra “ciberespacio”.'],
+ ['1983','Nace la palabra','Se publica “Cyberpunk”, cuento de Bruce Bethke. El editor Gardner Dozois populariza el término para nombrar al movimiento.'],
+ ['1984','Neuromancer','William Gibson gana Hugo, Nebula y Philip K. Dick con la novela que se volvió la biblia del género: hackers, IA y la Matrix.'],
+ ['1986','Mirrorshades','Bruce Sterling publica la antología que funciona como manifiesto del movimiento cyberpunk.'],
+ ['1988','Akira (película) y el juego de rol','El anime de Akira explota en el mundo, y Mike Pondsmith lanza el juego de rol “Cyberpunk”: la semilla directa de 2077.'],
+ ['1989–1999','Ghost in the Shell y The Matrix','Masamune Shirow (manga 1989, película 1995) y las hermanas Wachowski (1999) llevan el género al mainstream.']
+];
+$('#originTL').innerHTML=origin.map(([y,t,p])=>`<div class="ev reveal"><div class="yr">${y}</div><h3>${t}</h3><p>${p}</p></div>`).join('');
+
+/* ---------- 02 game history ---------- */
+const game=[
+ ['1988','R. TALSORIAN','Cyberpunk','Mike Pondsmith publica el juego de rol de mesa ambientado en 2013. Introduce Night City.'],
+ ['1990','R. TALSORIAN','Cyberpunk 2020','La edición más famosa. Aquí viven las leyendas de Johnny Silverhand, Rogue y Morgan Blackhand.'],
+ ['2005','R. TALSORIAN','Cyberpunk V3.0','Tercera edición, ambientada en los 2030 tras la guerra corporativa.'],
+ ['2012','CD PROJEKT RED','Anuncio','El estudio de The Witcher anuncia un juego basado en Cyberpunk, con Pondsmith colaborando.'],
+ ['2013','CD PROJEKT RED','Primer teaser','Una ciberpsicópata con cuchillas mantis rodeada por la policía. Luego vino el silencio.'],
+ ['2018','E3','El regreso','Tráiler y demo de 48 minutos en primera persona que muestran Night City por fin.'],
+ ['2019','E3','“You’re breathtaking!”','Keanu Reeves aparece como Johnny Silverhand y se vuelve meme instantáneo.'],
+ ['2020','LANZAMIENTO','Cyberpunk 2077','Sale el 10 de diciembre tras varios retrasos. Lanzamiento caótico en consolas viejas; Sony lo retira de su tienda.','red'],
+ ['2020','R. TALSORIAN','Cyberpunk RED','Nueva edición del rol, ambientada en 2045, el puente entre 2020 y 2077.'],
+ ['2022','REDENCIÓN','Parche 1.5 + Edgerunners','Versión next-gen y, en septiembre, el anime de TRIGGER dispara al juego otra vez a lo más jugado.'],
+ ['2023','2.0 + EXPANSIÓN','Phantom Liberty','Parche 2.0 rehace perks, policía y combate. La expansión trae Dogtown, Songbird y a Idris Elba como Solomon Reed.','red'],
+ ['2023–25','UPDATES','2.1 · 2.2 · 2.3','Metro NCART, radio en moto, más personalización y llegada a Switch 2.'],
+ ['2026','NETFLIX','Edgerunners 2','Nueva temporada el 20 de octubre, con historia y personajes nuevos.','red'],
+ ['FUTURO','PROJECT ORION','La secuela','CD Projekt RED ya trabaja en el siguiente Cyberpunk.']
+];
+$('#gameTL').innerHTML=game.map(([y,k,t,p,c])=>`<div class="chip ${c||''}"><div class="yr">${y}</div><span class="k">${k}</span><h3>${t}</h3><p>${p}</p></div>`).join('');
+
+/* ---------- 03 map ---------- */
+const D={
+ watson:{n:'Watson',col:'#fcee0a',pts:'250,40 440,30 470,150 380,190 270,170',lx:355,ly:110,meta:'Little China · Kabuki · Northside · Arasaka Waterfront',
+  desc:'Donde empieza todo. Distrito pobre y caótico tras la retirada corporativa, lleno de pandillas, mercados y ripperdocs.',
+  mis:['<b>The Rescue</b> — tu primer trabajo con Jackie: rescatar a Sandra Dorsett.','<b>The Pickup</b> — negociación con Maelstrom en la planta All Foods (Northside).','<b>The Information</b> — braindance con Judy en Lizzie’s Bar (Kabuki).'],
+  lore:['Aquí está el depa de V: Megabuilding H10.','La clínica de Viktor Vektor y la tienda esotérica de Misty están en la misma calle.','Territorio de Maelstrom, Tyger Claws y la Mox.'],
+  egg:['La bóveda del Relic y el primer encuentro con Dex sucede en esta zona.','Regina Jones es la fixer local y te encarga los avistamientos de ciberpsicópatas.'],
+  loot:['<b>Sandevistan / Kerenzikov</b> — con Viktor u otros ripperdocs.','<b>Cuchillas Mantis</b> — ripperdocs (como en el primer teaser del juego).']},
+ westbrook:{n:'Westbrook',col:'#ff2bd6',pts:'440,30 640,40 700,200 560,250 470,150',lx:575,ly:130,meta:'Japantown · Charter Hill · North Oak',
+  desc:'Lujo, neón y vicio. Japantown brilla de noche; North Oak tiene las mansiones de las estrellas y Arasaka.',
+  mis:['<b>Automatic Love</b> — Clouds, en Jig-Jig Street, buscando a Evelyn.','<b>Play It Safe</b> — el desfile de Hanako Arasaka en Japantown.','<b>Rebel! Rebel!</b> y misiones de Kerry en su mansión de North Oak.'],
+  lore:['Territorio de los Tyger Claws.','Wakako Okada es la fixer de Westbrook.','El cementerio de North Oak es donde termina el arco de Rogue y Johnny.'],
+  egg:['En Japantown aparecen varias de las cartas de Tarot grafiteadas (busca “Fool on the Hill”).'],
+  loot:['<b>Ropa de lujo</b> y tiendas de modificación en Kabuki-Japantown.','<b>Katanas</b>: las misiones de Tyger Claws suelen soltar buenas armas blancas.']},
+ center:{n:'City Center',col:'#00f0ff',pts:'380,190 470,150 560,250 520,330 400,330',lx:470,ly:250,meta:'Corpo Plaza · Downtown',
+  desc:'El corazón corporativo. Torre Arasaka, rascacielos de cristal y la Plaza Corpo. La ciudad que el dinero construyó.',
+  mis:['<b>The Heist</b> — el robo del Relic en Konpeki Plaza.','<b>Nocturne Op55N1</b> — la cena en Embers que abre el final.','El asalto a la <b>Torre Arasaka</b> en los finales.'],
+  lore:['Johnny Silverhand detonó una bomba nuclear aquí en 2023.','Dino Dinovic es el fixer de City Center.'],
+  egg:['Mira los anuncios gigantes: muchos son parodias de marcas reales y del propio género.'],
+  loot:['<b>Ropa “corpo”</b> y equipo de alta gama en tiendas del centro.']},
+ heywood:{n:'Heywood',col:'#3dff9a',pts:'270,170 380,190 400,330 330,420 220,360',lx:310,ly:290,meta:'Wellsprings · The Glen · Vista del Rey',
+  desc:'Barrio latino, casa de Jackie Welles y de los Valentinos. Mitad residencial, mitad territorio de pandillas.',
+  mis:['<b>Heroes</b> — la ofrenda de Jackie en El Coyote Cojo.','<b>Dream On</b> — la trama política con Jefferson Peralez.','Encargos de <b>Padre</b>, el fixer del barrio.'],
+  lore:['Mamá Welles atiende El Coyote Cojo.','Los Valentinos respetan a V si respetas a Jackie.'],
+  egg:['<b>Skippy</b>, la pistola que habla, está tirada en un callejón de Vista del Rey.'],
+  loot:['<b>Skippy</b> (Vista del Rey).','<b>La Arch de Jackie</b> — tras la misión “Heroes”.']},
+ santo:{n:'Santo Domingo',col:'#ff7b00',pts:'400,330 520,330 610,420 520,540 330,500 330,420',lx:450,ly:430,meta:'Arroyo · Rancho Coronado',
+  desc:'Industria, fábricas y suburbios obreros. Aquí creció David Martinez en Edgerunners.',
+  mis:['Encargos de <b>El Capitán</b>, fixer del distrito.','Contratos contra Los 6th Street.'],
+  lore:['Territorio de los 6th Street (exmilitares patriotas).','Estética industrial perfecta para fotos con el modo foto.'],
+  egg:['El barrio natal de David Martinez en el anime.'],
+  loot:['Vehículos y mods en zonas industriales de Arroyo.']},
+ pacifica:{n:'Pacifica',col:'#ff003c',pts:'170,360 220,360 330,420 330,500 260,600 170,600',lx:240,ly:470,meta:'Coastview · West Wind Estate · Dogtown',
+  desc:'El resort que nunca terminaron. Abandonado por los inversionistas, hoy lo controlan los Voodoo Boys y los Animals.',
+  mis:['<b>I Walk the Line</b> y <b>Transmission</b> — los Voodoo Boys y Alt Cunningham.','Contratos de <b>Mr. Hands</b>, el fixer más elegante.'],
+  lore:['El Grand Imperial Mall es un cascarón abandonado.','La NCPD casi no entra aquí.'],
+  egg:['La montaña rusa abandonada se puede recorrer en una misión secundaria.'],
+  loot:['Netrunning: los Voodoo Boys usan muchos quickhacks.']},
+ dogtown:{n:'Dogtown',col:'#b14bff',pts:'180,500 260,500 250,590 180,590',lx:220,ly:550,meta:'Phantom Liberty · Ciudad dentro de la ciudad',
+  desc:'Zona amurallada dentro de Pacifica, gobernada por Kurt Hansen y los Barghest. Aquí ocurre Phantom Liberty.',
+  mis:['<b>Dog Eat Dog</b> — rescatar a la presidenta Myers.','<b>Spider and the Fly</b>, <b>Lucretia My Reflection</b> — espionaje con Solomon Reed.','<b>Firestarter</b> — la gran decisión: Reed o Songbird.'],
+  lore:['Songbird (So Mi) es la netrunner de la FIA.','Phantom Liberty añade un final nuevo: <b>The Tower</b>.'],
+  egg:['Airdrops con loot de alto nivel caen por toda la zona.','Black market secreto (requiere acceso especial).'],
+  loot:['<b>Armas icónicas</b> en airdrops y misiones de Dogtown.','<b>Reliquia</b>: árbol de habilidades exclusivo de Phantom Liberty.']},
+ badlands:{n:'Badlands',col:'#c9a76b',pts:'640,40 790,30 790,630 520,630 520,540 610,420 560,250 700,200',lx:700,ly:420,meta:'Desierto · Rocky Ridge · Sunset Motel',
+  desc:'Fuera de la ciudad: desierto, nómadas, presas y campos solares. Hogar de los Aldecaldos.',
+  mis:['<b>Ghost Town</b>, <b>Riders on the Storm</b> — el arco de Panam.','<b>Queen of the Highway</b> — el Basilisk.','<b>With a Little Help from My Friends</b> — reunir a los nómadas.'],
+  lore:['Dakota Smith es la fixer de las Badlands.','El origen Nómada de V empieza aquí.'],
+  egg:['Restos de un avión y estructuras raras en el desierto: ve de noche.'],
+  loot:['<b>Vehículos de Panam</b> y de los Aldecaldos.']}
+};
+let curD='watson',curTab='mis';
+const tabs=[['mis','Misiones'],['lore','Lore'],['egg','Easter eggs'],['loot','Cómo conseguir']];
+$('#districts').innerHTML=Object.entries(D).map(([k,d])=>`<g><polygon class="d" data-k="${k}" points="${d.pts}" fill="${d.col}" stroke="${d.col}" style="color:${d.col}"/><text class="dl" x="${d.lx}" y="${d.ly}">${d.n.toUpperCase()}</text></g>`).join('');
+$('#pins').innerHTML=[[330,120,'#fcee0a'],[540,170,'#ff2bd6'],[470,220,'#00f0ff'],[290,320,'#3dff9a'],[230,560,'#b14bff'],[690,330,'#c9a76b']].map(([x,y,c])=>`<circle class="pin" cx="${x}" cy="${y}" r="5" fill="${c}" pointer-events="none"/>`).join('');
+$('#legend').innerHTML=Object.values(D).map(d=>`<span><i style="background:${d.col}"></i>${d.n}</span>`).join('');
+function renderInfo(){
+  const d=D[curD];
+  document.querySelectorAll('.d').forEach(p=>p.classList.toggle('sel',p.dataset.k===curD));
+  $('#info').innerHTML=`<h3 style="color:${d.col}">${d.n}</h3><div class="meta">${d.meta}</div><p class="desc">${d.desc}</p>
+   <div class="tabs">${tabs.map(([k,l])=>`<button data-t="${k}" class="${k===curTab?'on':''}">${l}</button>`).join('')}</div>
+   <ul>${d[curTab].map(x=>`<li style="border-color:${d.col}">${x}</li>`).join('')}</ul>`;
+}
+$('#map').addEventListener('click',e=>{const k=e.target.dataset.k;if(k){curD=k;renderInfo()}});
+$('#info').addEventListener('click',e=>{const t=e.target.dataset.t;if(t){curTab=t;renderInfo()}});
+renderInfo();
+
+/* ---------- 04 eggs ---------- */
+const eggs=[
+ ['loot','Arma','Malorian Arms 3516','La pistola de Johnny Silverhand.','Misión “Chippin’ In”, de Grayson'],
+ ['loot','Vehículo','Porsche 911 Turbo de Johnny','El auto clásico de Johnny, enterrado con él durante años.','Misión “Chippin’ In”'],
+ ['loot','Arma','Skippy','Pistola inteligente con IA que platica contigo y elige su propio modo de disparo.','Callejón en Vista del Rey, Heywood'],
+ ['loot','Vehículo','Arch de Jackie','La moto de Jackie, para honrar a tu choom.','Tras la misión “Heroes”'],
+ ['loot','Cyberware','Sandevistan','El implante de David en Edgerunners. Ralentiza el tiempo.','Ripperdocs (Viktor en Watson)'],
+ ['loot','Edgerunners','Guiños de la crew','El parche 1.6 añadió coleccionables inspirados en la crew de Maine: ropa y armas del anime.','Repartidos por Night City'],
+ ['egg','Easter egg','Cartas del Tarot','22 grafitis de cartas del Tarot escondidos por la ciudad. Misty los conecta con tu destino.','Misión “Fool on the Hill”'],
+ ['egg','Easter egg','Misiones con nombre de canción','“Heroes”, “Riders on the Storm”, “Pyramid Song”, “Down on the Street”, “I Fought the Law”… todas son canciones reales.','Todo el juego'],
+ ['egg','Easter egg','Roach Race','Una maquinita arcade con el caballo de Geralt de The Witcher. Guiño directo de CD Projekt RED a su otra saga.','Arcades de Night City'],
+ ['egg','Easter egg','Mr. Blue Eyes','Un tipo misterioso de ojos azules que aparece en momentos clave. Nadie sabe bien para quién trabaja.','Varias misiones y Phantom Liberty'],
+ ['egg','Easter egg','El teaser de 2013','La ciberpsicópata con cuchillas mantis del primer teaser inspiró la mecánica de ciberpsicosis.','Avistamientos de ciberpsicópatas'],
+ ['story','Historia','Los finales','The Sun, The Devil, The Star, Temperance, el secreto “Don’t Fear the Reaper” y The Tower (Phantom Liberty).','Depende de tus relaciones y decisiones'],
+ ['story','Historia','Ciberpsicópatas','17 avistamientos de ciberpsicosis. Puedes neutralizarlos sin matarlos para un mejor resultado.','Encargos de Regina Jones'],
+ ['story','Historia','Alt Cunningham','La netrunner que Johnny amó vive detrás del Muro Negro. “Never Fade Away” es sobre ella.','“Transmission”, Pacifica'],
+ ['story','Historia','Delamain','Una IA de taxis que empieza a fragmentarse. Su arco tiene tres desenlaces muy distintos.','Misiones “Epistrophy”'],
+ ['story','Final secreto','Don’t Fear the Reaper','Con una relación muy alta con Johnny, espera unos minutos sin elegir en la decisión final. Johnny propone ir solos contra Arasaka. Sin checkpoints.','Decisión final, con Johnny al máximo'],
+ ['story','Historia','Tres orígenes','Nómada, Streetkid o Corpo: cada uno tiene su prólogo y opciones de diálogo únicas durante todo el juego.','Al crear a V'],
+ ['loot','Mascota','Nibbles','Deja comida a un gato que ronda tu megaedificio y termina mudándose a tu departamento.','Megabuilding H10, Watson'],
+ ['egg','Easter egg','Lizzy Wizzy','Estrella pop full-borg, cuerpo completamente cromado. Su música suena en la radio y tiene su propio momento en la historia.','Radio y misiones secundarias'],
+ ['egg','Easter egg','Johnny en los espejos','Después del Relic, Johnny aparece de golpe en reflejos y pantallas. Fíjate en los espejos en momentos clave.','Varias misiones principales'],
+ ['egg','Easter egg','Guiños en Phantom Liberty','Varios perks y detalles del árbol de habilidades hacen referencia directa a Edgerunners.','Árbol de habilidades 2.0']
+];
+const cats=[['all','Todo'],['loot','Cómo conseguir'],['egg','Easter eggs'],['story','Historia']];
+const catCol={loot:'var(--y)',egg:'var(--m)',story:'var(--c)'};
+$('#filters').innerHTML=cats.map(([k,l],i)=>`<button data-f="${k}" class="${i?'':'on'}">${l}</button>`).join('');
+$('#cards').innerHTML=eggs.map(([c,t,h,p,w])=>`<div class="card reveal" data-c="${c}"><div class="t" style="color:${catCol[c]}">${t}</div><h3>${h}</h3><p>${p}</p><div class="where">${w}</div></div>`).join('');
+$('#filters').addEventListener('click',e=>{const f=e.target.dataset.f;if(!f)return;
+  document.querySelectorAll('#filters button').forEach(b=>b.classList.toggle('on',b.dataset.f===f));
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('hide',f!=='all'&&c.dataset.c!==f));});
+
+/* ---------- 06 music ---------- */
+const B={of:['b-of','OFICIAL'],mi:['b-mi','MISIÓN'],op:['b-op','VIBE']};
+const trk=(who,name,art,b)=>`<a class="trk" target="_blank" rel="noopener" href="${yt(name+' '+art)}"><div class="cov"><i></i><i></i><i></i><i></i></div><div><div class="who">${who}</div><div class="name">${name}</div><div class="art">${art}</div></div><span class="badge ${B[b][0]}">${B[b][1]}</span></a>`;
+$('#t-s1').innerHTML=[
+ ['Opening','This Fffire','Franz Ferdinand','of'],
+ ['David · Ending','Let You Down','Dawid Podsiadło','of'],
+ ['Lucy','I Really Want to Stay at Your House','Rosa Walton & Hallie Coggins','of'],
+ ['Rebecca','Who’s Ready for Tomorrow','Rat Boy & IBDY','op'],
+ ['Maine','Resist and Disorder','Rezodrone','op']
+].map(a=>trk(...a)).join('');
+$('#t-s2').innerHTML=[
+ ['Opening','10:15 Saturday Night','The Cure','of'],
+ ['Ending','Watson','Petite Meller','of'],
+ ['Insert song','You Can’t Run From Me','Rico Nasty','of'],
+ ['Insert song','A Rusty Dream','DOUDOU','of']
+].map(a=>trk(...a)).join('');
+$('#t-77').innerHTML=[
+ ['V · Tema principal','The Rebel Path','P.T. Adamczyk','of'],
+ ['Johnny Silverhand','Chippin’ In','SAMURAI','of'],
+ ['Alt Cunningham','Never Fade Away','SAMURAI','of'],
+ ['Kerry Eurodyne','PonPon Shit','Us Cracks feat. Kerry Eurodyne','of'],
+ ['Jackie Welles','Heroes','David Bowie','mi'],
+ ['Panam Palmer','Riders on the Storm','The Doors','mi'],
+ ['Judy Alvarez','Pyramid Song','Radiohead','mi'],
+ ['River Ward','I Fought the Law','The Clash','mi'],
+ ['Goro Takemura','Down on the Street','The Stooges','mi'],
+ ['Delamain','Epistrophy','Thelonious Monk','mi'],
+ ['Songbird','Somewhat Damaged','Nine Inch Nails','mi'],
+ ['Solomon Reed','Lucretia My Reflection','The Sisters of Mercy','mi']
+].map(a=>trk(...a)).join('');
+
+$('#t-sam').innerHTML=[
+ ['SAMURAI','Chippin’ In','SAMURAI','of'],['SAMURAI','Never Fade Away','SAMURAI','of'],['SAMURAI','Black Dog','SAMURAI','of'],
+ ['SAMURAI','A Like Supreme','SAMURAI','of'],['SAMURAI','The Ballad of Buck Ravers','SAMURAI','of'],['SAMURAI','Archangel','SAMURAI','of']
+].map(a=>trk(...a)).join('');
+
+/* ---------- 04 dossiers ---------- */
+const people=[
+ ['V','Mercenario/a','#fcee0a','El protagonista. Nómada, Streetkid o Corpo según tu origen. Tras el atraco a Konpeki carga el Relic con el engrama de Johnny.','Voz (EN): Gavin Drea / Cherami Leigh'],
+ ['Johnny Silverhand','Rockerboy · SAMURAI','#ff003c','Líder de SAMURAI. Detonó una bomba en la Torre Arasaka en 2023. Su conciencia vive en el Relic, dentro de la cabeza de V.','Interpretado por Keanu Reeves'],
+ ['Jackie Welles','Mercenario · Heywood','#3dff9a','El mejor choom de V. Soñaba con ser leyenda del Afterlife. Su ofrenda se hace en El Coyote Cojo.','Misión clave: “Heroes”'],
+ ['Judy Alvarez','Técnica de braindance','#ff2bd6','Experta en BD, ligada a la Mox. Su arco termina bajo el agua en Laguna Bend.','Romance: V de cuerpo femenino'],
+ ['Panam Palmer','Nómada Aldecaldo','#c9a76b','Ruda, leal y explosiva. Te lleva a las Badlands y a pilotar el Basilisk.','Romance: V de cuerpo masculino'],
+ ['Kerry Eurodyne','Rockstar · ex-SAMURAI','#b14bff','Leyenda del rock en crisis creativa. Vive en una mansión en North Oak.','Romance: V de cuerpo masculino'],
+ ['River Ward','Detective NCPD','#00f0ff','Policía honesto en una ciudad que no lo es. Su arco es de los más oscuros del juego.','Romance: V de cuerpo femenino'],
+ ['Goro Takemura','Guardaespaldas Arasaka','#ff7b00','Leal a Saburo Arasaka hasta el final. Fan secreto de la comida callejera (aunque se queje).','Arco: “Down on the Street”'],
+ ['Rogue','Reina de los fixers','#fcee0a','Dueña del Afterlife y ex de Johnny. Una leyenda viva que sobrevivió a todos.','Misión clave: “Chippin’ In”'],
+ ['Alt Cunningham','Netrunner legendaria','#00f0ff','Creó Soulkiller y terminó convertida en IA detrás del Muro Negro.','Canción: “Never Fade Away”'],
+ ['Adam Smasher','Full borg · Arasaka','#ff003c','Casi nada de humano le queda. Mató a David en Edgerunners y es jefe final en 2077.','“Basura de carne” para él'],
+ ['Songbird','Netrunner FIA','#ff2bd6','So Mi, el motor de Phantom Liberty. Tan talentosa como desesperada.','Phantom Liberty'],
+ ['Solomon Reed','Agente FIA durmiente','#3dff9a','Espía veterano con un pasado que lo persigue. Lealtad dividida entre su país y Songbird.','Interpretado por Idris Elba'],
+ ['Viktor Vektor','Ripperdoc · Watson','#c9a76b','Ex boxeador y el ripperdoc más confiable de Night City. Te arma el primer cromo.','Clínica en Watson'],
+ ['Misty','Tarot y esoterismo','#b14bff','Novia de Jackie. Lee el destino de V en las cartas del Tarot.','Misión: “Fool on the Hill”'],
+ ['Hanako Arasaka','Heredera Arasaka','#ff7b00','Hija de Saburo. Puede ser aliada o enemiga según el final.','Final: The Devil']
+];
+$('#dossiers').innerHTML=people.map(([n,r,k,d,x])=>`<div class="dos reveal" tabindex="0" style="--k:${k}"><div class="in">
+ <div class="f"><div class="av">${n.split(' ').map(w=>w[0]).join('').slice(0,2)}</div><div class="r">${r}</div><h3>${n}</h3></div>
+ <div class="b"><b>// DOSSIER</b><h3 style="color:#fff">${n}</h3><p>${d}</p><b>${x}</b></div></div></div>`).join('');
+
+/* ---------- 05 factions ---------- */
+const gangs=[
+ ['Maelstrom','Watson · Northside','#ff003c','Obsesionados con el cromo extremo; rozan la ciberpsicosis a propósito.'],
+ ['Tyger Claws','Watson · Japantown','#00f0ff','Estilo yakuza: motos, katanas, clubes y el negocio de Jig-Jig Street.'],
+ ['Valentinos','Heywood','#fcee0a','Familia, fe y honor. Respetan a quien respeta al barrio.'],
+ ['6th Street','Santo Domingo','#3dff9a','Veteranos patriotas que se dicen protectores del barrio. Armados hasta los dientes.'],
+ ['Voodoo Boys','Pacifica','#b14bff','Netrunners que quieren cruzar el Muro Negro y hablar con las IAs del otro lado.'],
+ ['Animals','Pacifica','#ff7b00','Hormonas, músculo y golpes. Ganan peleando, no con implantes.'],
+ ['The Mox','Kabuki','#ff2bd6','Protegen a los trabajadores de Lizzie’s Bar. Nacieron tras una tragedia.'],
+ ['Scavengers','Toda la ciudad','#8b8ba3','Secuestran gente para arrancarle el cyberware. Los más odiados de Night City.'],
+ ['Wraiths','Badlands','#c9a76b','Nómadas renegados que asaltan caravanas en el desierto.'],
+ ['Barghest','Dogtown','#ff003c','Milicia de Kurt Hansen. Controlan Dogtown con armas de nivel militar.'],
+ ['Aldecaldos','Badlands','#00f0ff','Clan nómada, no pandilla: la familia de Panam.']
+];
+$('#gangs').innerHTML=gangs.map(([n,z,k,p])=>`<div class="gang" style="--k:${k}"><h3>${n}</h3><div class="z">${z}</div><p>${p}</p></div>`).join('');
+const corps=[['Arasaka','JP','Seguridad, banca y armas. La corpo más temida.'],['Militech','EUA','Armas y ejército privado; rival eterno de Arasaka.'],['Kang Tao','CN','Armas inteligentes en ascenso.'],['Biotechnica','—','Biotecnología, comida y combustibles.'],['Petrochem','—','Energía y agricultura a escala masiva.'],['Trauma Team','—','Ambulancias armadas por suscripción.'],['NetWatch','—','La policía de la Red. Cuidan el Muro Negro.'],['Zetatech','—','Cyberware y tecnología.'],['Kiroshi','JP','Los ojos cibernéticos que todos usan.']];
+$('#corps').innerHTML=corps.map(([n,o,p])=>`<div class="corp"><h3>${n} <span>${o}</span></h3><p>${p}</p></div>`).join('');
+
+/* ---------- 06 cyberware ---------- */
+const cw=[
+ ['os','Sistema operativo','Sandevistan','Ralentiza el tiempo a tu alrededor. El implante de David en Edgerunners.','Build: Reflejos / sigilo'],
+ ['os','Sistema operativo','Berserk','Más daño cuerpo a cuerpo y resistencia por un rato.','Build: Cuerpo / tanque'],
+ ['os','Sistema operativo','Cyberdeck','Habilita quickhacks: freír, cegar, sobrecalentar y apagar enemigos.','Build: Netrunner'],
+ ['head','Ojos','Kiroshi Optics','Escaneo, zoom y marcado de enemigos. Base de cualquier build.','Todas las builds'],
+ ['arms','Brazos','Mantis Blades','Cuchillas retráctiles para saltar y cortar. Salieron en el teaser de 2013.','Build: Reflejos'],
+ ['arms','Brazos','Gorilla Arms','Puñetazos brutales y abrir puertas a la fuerza.','Build: Cuerpo'],
+ ['arms','Brazos','Monowire','Látigo de alambre que corta y puede propagar quickhacks.','Build: Netrunner híbrido'],
+ ['arms','Brazos','Projectile Launch System','Un lanzamisiles dentro del brazo.','Build: Técnica'],
+ ['os','Sistema nervioso','Kerenzikov','Ralentiza el tiempo al apuntar mientras esquivas o te deslizas.','Build: pistolas / escopetas'],
+ ['legs','Piernas','Reinforced Tendons','Doble salto: la movilidad que cambia todo.','Todas las builds'],
+ ['legs','Piernas','Fortified Ankles','Supersalto cargado y aterrizajes con impacto.','Build: Cuerpo']
+];
+const spots={head:[100,45],os:[100,120],arms:[150,190],legs:[100,330]};
+$('#hot').innerHTML=Object.entries(spots).map(([k,[x,y]])=>`<g class="hp" data-p="${k}"><circle cx="${x}" cy="${y}" r="7" fill="#fcee0a" data-p="${k}"/><text x="${x+14}" y="${y+4}" fill="#00f0ff" font-family="Share Tech Mono" font-size="11" data-p="${k}">${{head:'OJOS',os:'OS / NERVIOS',arms:'BRAZOS',legs:'PIERNAS'}[k]}</text></g>`).join('');
+$('#cwlist').innerHTML=cw.map(([p,s,n,d,b])=>`<div class="cwi" data-p="${p}"><div class="s">${s}</div><h3>${n}</h3><p>${d}</p><div class="bd">${b}</div></div>`).join('');
+$('#hot').addEventListener('click',e=>{const p=e.target.dataset.p;if(!p)return;
+  document.querySelectorAll('.hp').forEach(h=>h.classList.toggle('on',h.dataset.p===p));
+  document.querySelectorAll('.cwi').forEach(c=>c.classList.toggle('on',c.dataset.p===p));});
+
+/* ---------- 10 trailers ---------- */
+const tv=[
+ ['2013','Teaser trailer','Cyberpunk 2077 teaser trailer 2013','#ff003c'],
+ ['2018','E3 2018 trailer','Cyberpunk 2077 E3 2018 trailer','#00f0ff'],
+ ['2019','E3 2019 · Keanu Reeves','Cyberpunk 2077 E3 2019 cinematic trailer','#fcee0a'],
+ ['2020','Launch trailer','Cyberpunk 2077 official launch trailer','#ff2bd6'],
+ ['2022','Edgerunners · Netflix','Cyberpunk Edgerunners official trailer Netflix','#b14bff'],
+ ['2023','Phantom Liberty','Cyberpunk 2077 Phantom Liberty official cinematic trailer','#3dff9a'],
+ ['2023','Update 2.0','Cyberpunk 2077 update 2.0 trailer','#ff7b00'],
+ ['2026','Edgerunners 2','Cyberpunk Edgerunners 2 official trailer','#ff003c']
+];
+$('#tv').innerHTML=tv.map(([y,t,q,k])=>`<a class="vid" style="--k:${k}" href="${yt(q)}" target="_blank" rel="noopener"><span class="play">▶</span><span class="tt"><small>${y}</small><b>${t}</b></span></a>`).join('');
+
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
